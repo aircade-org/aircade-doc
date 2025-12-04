@@ -69,7 +69,18 @@ To work on this project you need:
 
 ***
 
-## Step 4 – Clone the Repository and Install Dependencies
+## Step 4 – Install Turborepo
+
+1. Open a terminal.
+2. With pnpm installed, run in a terminal:  
+
+   ```bash
+   pnpm add turbo --global
+   ```
+
+***
+
+## Step 5 – Clone the Repository and Install Dependencies
 
 1. Open a terminal.  
 2. Navigate to the directory where you want to keep the project and clone the repo:  
@@ -88,15 +99,6 @@ To work on this project you need:
    This will read the workspace configuration (e.g., `pnpm-workspace.yaml`) and install dependencies for all apps and packages efficiently.
 
 ***
-
-## Step 5 – Install Turborepo
-
-1. Open a terminal.
-2. With pnpm installed, run in a terminal:  
-
-   ```bash
-   pnpm add turbo --global
-   ```
 
 ## Step 6 – Verify Your Setup
 
