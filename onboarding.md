@@ -1,16 +1,5 @@
 # AirCade OnBoarding
 
-## Prerequisites Overview
-
-To work on this project you need:
-
-- **Git** (for cloning and version control).
-- **Node.js (LTS)**, which includes npm.
-- **pnpm** (package manager used by the monorepo).
-- **Turborepo** (build system for TypeScript used by the monorepo).
-
-***
-
 ## Step 1 – Install Git
 
 1. Go to the official Git download page and download **Git**.
@@ -105,11 +94,3 @@ With dependencies installed, run the dev scripts defined for the monorepo:
 ```bash
 pnpm dev
 ```
-
-- This typically starts the **Next.js** frontend and **NestJS** backend concurrently via Turborepo tasks (exact commands may vary depending on the repo).  
-- Open the URLs shown in the terminal (commonly `http://localhost:3000` for web and `http://localhost:3001` for API) in your browser to confirm everything runs correctly.  
-
-If you see build or type errors, confirm that:
-
-- `node -v`, `pnpm -v`, and `git --version` all output versions without errors.
-- Your terminal was opened **after** installing Node.js and pnpm so that `PATH` changes were picked up.
