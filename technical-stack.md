@@ -1,6 +1,6 @@
 > [< back](./README.md)
 
-# Technical Stack
+# AirCade Technical Stack
 
 This project uses a **Turborepo monorepo** to manage multiple applications and shared packages for a browser-based multiplayer gaming platform.
 

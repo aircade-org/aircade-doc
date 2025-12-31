@@ -1,6 +1,6 @@
 > [< back](./README.md)
 
-# Specification
+# AirCade Specification
 
 ## Scope and goals
 
