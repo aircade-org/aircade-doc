@@ -1,5 +1,3 @@
-> [< back](./README.md)
-
 # AirCade OnBoarding
 
 ## Prerequisites Overview
@@ -115,5 +113,3 @@ If you see build or type errors, confirm that:
 
 - `node -v`, `pnpm -v`, and `git --version` all output versions without errors.
 - Your terminal was opened **after** installing Node.js and pnpm so that `PATH` changes were picked up.
-
-> [< back](./README.md)

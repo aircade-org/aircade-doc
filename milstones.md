@@ -1,5 +1,3 @@
-> [< back](./README.md)
-
 # AirCade Milestones
 
 ## M0.1.0: Repository & Infrastructure Setup
@@ -92,5 +90,3 @@
 - [ ] **[Infra]** Set up deployment pipelines to deploy `apps/web` to Vercel.
 - [ ] **[Infra]** Set up deployment pipelines to deploy `apps/api` to a Node.js hosting provider (e.g., Railway, Fly.io).
 - [ ] **[Documentation]** Write a basic `README.md` explaining how to run the project and play the game.
-
-> [< back](./README.md)

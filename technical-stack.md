@@ -1,5 +1,3 @@
-> [< back](./README.md)
-
 # AirCade Technical Stack
 
 This project uses a **Turborepo monorepo** to manage multiple applications and shared packages for a browser-based multiplayer gaming platform.
@@ -21,17 +19,17 @@ All workspaces are managed with **pnpm workspaces** and orchestrated by **Turbor
 ```tkt
 /
 ├── apps/
-│   ├── web/              # Next.js 15 SSR frontend (console + controller UI)
-│   └── api/              # NestJS backend (REST + WebSocket)
+│   ├── web/               # Next.js 15 SSR frontend (console + controller UI)
+│   └── api/               # NestJS backend (REST + WebSocket)
 ├── packages/
-│   ├── database/         # Prisma schema, client, and migrations
-│   ├── typescript-config/# Shared TypeScript configurations
-│   ├── eslint-config/    # Shared ESLint rules
-│   ├── ui/               # Shared React components (optional)
-│   └── types/            # Shared TypeScript types and DTOs
-├── turbo.json            # Turborepo pipeline configuration
-├── package.json          # Root workspace configuration
-└── pnpm-workspace.yaml   # pnpm workspace definition
+│   ├── database/          # Prisma schema, client, and migrations
+│   ├── typescript-config/ # Shared TypeScript configurations
+│   ├── eslint-config/     # Shared ESLint rules
+│   ├── ui/                # Shared React components (optional)
+│   └── types/             # Shared TypeScript types and DTOs
+├── turbo.json             # Turborepo pipeline configuration
+├── package.json           # Root workspace configuration
+└── pnpm-workspace.yaml    # pnpm workspace definition
 ```
 
 ## Technology Stack
@@ -284,5 +282,3 @@ DATABASE_URL=postgresql://postgres:[password]@db.supabase.co:5432/postgres
 - **Redis**: Use Upstash Redis or managed Redis from cloud provider
 
 **Build optimization**: Turborepo's remote caching can be configured with Vercel Remote Cache to speed up CI/CD pipelines across all apps.
-
-> [< back](./README.md)
