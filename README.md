@@ -1,8 +1,20 @@
-# AirCade Documentation
+# AirCade - Documentation
 
-A browser-based party game platform where any screen becomes the console and everyone plays together using their phones as controllers.
+*Create. Play. Share.*
 
+AirCade is a browser-based platform where you build multiplayer games in an integrated code editor and instantly play them on any screen using smartphones as controllers. No consoles, no downloads - just create and play.
+
+## Documents
+
+- [Descriptions](./descriptions.md)
+- [Overview](./overview.md)
+- [Product Requirements](./product_requirements_document.md)
 - [Specification](./specification.md)
-- [Milestone Roadmap](./milstones.md)
 - [Technical Stack](./technical-stack.md)
-- [OnBoarding](./onboarding.md)
+- [Milestone Roadmap](./milstones.md)
+
+## Insprations
+
+- AirConsol:
+  - [Overview](./airconsol/overview.md)
+  - [Product](./airconsol/product_requirements.md)
