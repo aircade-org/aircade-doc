@@ -2,7 +2,7 @@
 
 This project uses a **Turborepo monorepo** to manage multiple applications and shared packages for a browser-based multiplayer gaming platform.
 
-The stack combines Next.js 15 for server-side rendered frontends, NestJS for the real-time backend API, and Prisma with Supabase PostgreSQL for database management.
+The stack combines Next.js 16 for server-side rendered frontends, NestJS for the real-time backend API, and Prisma with Supabase PostgreSQL for database management.
 
 ## Architecture Overview
 
@@ -19,7 +19,7 @@ All workspaces are managed with **pnpm workspaces** and orchestrated by **Turbor
 ```tkt
 /
 ├── apps/
-│   ├── web/               # Next.js 15 SSR frontend (console + controller UI)
+│   ├── web/               # Next.js 16 SSR frontend (console + controller UI)
 │   └── api/               # NestJS backend (REST + WebSocket)
 ├── packages/
 │   ├── database/          # Prisma schema, client, and migrations
@@ -36,7 +36,7 @@ All workspaces are managed with **pnpm workspaces** and orchestrated by **Turbor
 
 ### Frontend (apps/web)
 
-- **Framework**: Next.js 15 with App Router for SSR and React Server Components
+- **Framework**: Next.js 16 with App Router for SSR and React Server Components
 - **Language**: TypeScript 5.x
 - **Styling**: Tailwind CSS (recommended) or CSS Modules
 - **State Management**: React Context, Zustand, or React Query for server state
