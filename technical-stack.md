@@ -1,1 +1,111 @@
 # AirCade - Technical Stack
+
+## Hosting
+
+**Railway.com** hosts the entire platform: database, API server, and web frontend. Railway provides container-based deployments with built-in CI/CD from Git, automatic TLS, environment management, and managed PostgreSQL - eliminating the need for separate infrastructure tooling.
+
+---
+
+## Database
+
+**PostgreSQL** serves as the sole persistent data store. It handles user accounts, game project metadata, published game assets, session records, community content (ratings, reviews), and subscription state.
+
+PostgreSQL is accessed exclusively through SeaORM on the backend (see below). No raw SQL is written in application code.
+
+---
+
+## Backend - API Server
+
+The backend is written in **Rust** and exposes an HTTP/WebSocket API consumed by the frontend.
+
+### Web Framework - Axum
+
+**Axum** is the async web framework used for routing, middleware, and request handling. It provides:
+
+- Type-safe route extractors and response types
+- Tower-based middleware for authentication, logging, and error handling
+- Native WebSocket support for real-time game session communication
+
+### ORM - SeaORM
+
+**SeaORM** handles all database interaction. It provides:
+
+- Async-native query building and execution
+- Schema migration management
+- Compile-time model definitions that stay in sync with the database schema
+
+### Real-Time Communication
+
+Game sessions require low-latency, bidirectional communication between the big screen, player smartphones, and the server. This is handled via **WebSockets** through Axum's built-in WebSocket support. The server relays game state updates between connected clients within a session.
+
+---
+
+## Frontend - Web Application
+
+The frontend is built with **TypeScript** and **Next.js 16**. It serves three distinct user-facing experiences from a single application:
+
+1. **The Creative Studio** - browser-based code editor where creators build games using the dual-canvas model
+2. **The Console (Big Screen)** - lobby, game library, and game rendering displayed on TVs, laptops, or projectors
+3. **The Controller (Smartphone)** - dynamic, game-specific touch interface displayed on each player's phone
+
+Next.js handles server-side rendering, routing, and API layer integration. TypeScript provides type safety across the entire frontend codebase.
+
+---
+
+## Game Runtime
+
+Creators write games in **JavaScript** or **TypeScript** using the **p5.js** creative coding library. p5.js provides a simple drawing API well-suited for 2D game graphics and is widely taught in educational settings.
+
+Every game consists of two synchronized canvases (the dual-canvas model):
+
+- **Game Screen canvas** - rendered on the big screen, shows the shared game world
+- **Controller Screen canvas** - rendered on each player's phone, shows private controls and information
+
+Both canvases share the same game state and communicate through the platform's WebSocket layer. The game runtime executes in the browser on both the big screen and each connected smartphone.
+
+### Planned Additions
+
+- **3D rendering engine** - a browser-based 3D option for games with spatial environments
+- **Visual game builder** - a graphical editor for creators who prefer a low-code workflow
+
+Both will integrate into the same dual-canvas architecture.
+
+---
+
+## Architecture Overview
+
+```txt
+┌────────────────────────────────────────────────────────────┐
+│                        Railway.com                         │
+│                                                            │
+│  ┌──────────────┐  ┌───────────────────┐  ┌──────────────┐ │
+│  │  PostgreSQL  │  │     Rust API      │  │   Next.js    │ │
+│  │  (Database)  │◄─┤  (Axum + SeaORM)  │  │  (Frontend)  │ │
+│  └──────────────┘  └─────────┬─────────┘  └──────┬───────┘ │
+│                              │                   │         │
+└──────────────────────────────┼───────────────────┼─────────┘
+                               │                   │
+                     WebSocket + HTTP         HTML/JS/CSS
+                               │                   │
+                    ┌──────────┴───────────────────┴─────────┐
+                    │                Browsers                │
+                    │                                        │
+                    │  ┌──────────────┐  ┌─────────────────┐ │
+                    │  │  Big Screen  │  │   Smartphones   │ │
+                    │  │  (Console)   │  │  (Controllers)  │ │
+                    │  └──────────────┘  └─────────────────┘ │
+                    └────────────────────────────────────────┘
+```
+
+---
+
+## Summary
+
+| Layer         | Technology                   |
+|---------------|------------------------------|
+| Hosting       | Railway.com                  |
+| Database      | PostgreSQL                   |
+| Backend       | Rust, Axum, SeaORM           |
+| Frontend      | TypeScript, Next.js 16       |
+| Game Runtime  | JavaScript/TypeScript, p5.js |
+| Real-Time     | WebSockets (via Axum)        |
