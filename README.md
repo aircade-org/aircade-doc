@@ -19,8 +19,8 @@ AirCade is a browser-based platform where you build multiplayer games in an inte
 - [Technical Stack](./technical-stack.md) - Technology choices.
 - [Milestone Roadmap](./milstones.md) - Milestone roadmap.
 
-## Inspration Project
+## Insprations
 
 - AirConsol:
-  - [Overview](./airconsol/overview.md)
-  - [Product](./airconsol/product_requirements.md)
+  - [Overview](./insprations/airconsol/overview.md)
+  - [Product](./insprations/airconsol/product_requirements.md)
