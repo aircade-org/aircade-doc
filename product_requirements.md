@@ -33,35 +33,35 @@ AirCade sits at the intersection of three powerful trends: the maker movement in
 
 ### Persona A: The Creative Developer
 
-| | |
-|---|---|
-| **Profile** | A hobbyist programmer, game design student, or indie developer who loves experimenting with interactive ideas. Comfortable with JavaScript or visual scripting but does not have access to expensive game engines or the time to set up complex networking infrastructure. |
-| **Pain Point** | Building a multiplayer game from scratch is overwhelmingly complex. Testing it requires convincing friends to install custom software. Sharing it means navigating app stores or hosting servers. |
-| **Goal** | A frictionless environment to code, test, and share multiplayer games that anyone can play instantly from their browser. |
+|                |                                                                                                                                                                                                                                                                            |
+|---------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|    **Profile** | A hobbyist programmer, game design student, or indie developer who loves experimenting with interactive ideas. Comfortable with JavaScript or visual scripting but does not have access to expensive game engines or the time to set up complex networking infrastructure. |
+| **Pain Point** | Building a multiplayer game from scratch is overwhelmingly complex. Testing it requires convincing friends to install custom software. Sharing it means navigating app stores or hosting servers.                                                                          |
+|       **Goal** | A frictionless environment to code, test, and share multiplayer games that anyone can play instantly from their browser.                                                                                                                                                   |
 
 ### Persona B: The Educator or Workshop Leader
 
-| | |
-|---|---|
-| **Profile** | A teacher, professor, or corporate trainer who wants to use interactive games to engage their audience. Has basic technical literacy but is not a professional programmer. |
-| **Pain Point** | Existing educational games are generic and do not adapt to specific lesson plans. Custom tools like Kahoot are limited to quizzes and lack real interactivity. |
-| **Goal** | The ability to create tailored interactive experiences (simulations, collaborative challenges, role-based scenarios) that a classroom or workshop can join in seconds. |
+|                |                                                                                                                                                                            |
+|---------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|    **Profile** | A teacher, professor, or corporate trainer who wants to use interactive games to engage their audience. Has basic technical literacy but is not a professional programmer. |
+| **Pain Point** | Existing educational games are generic and do not adapt to specific lesson plans. Custom tools like Kahoot are limited to quizzes and lack real interactivity.             |
+|       **Goal** | The ability to create tailored interactive experiences (simulations, collaborative challenges, role-based scenarios) that a classroom or workshop can join in seconds.     |
 
 ### Persona C: The Social Host
 
-| | |
-|---|---|
-| **Profile** | Enjoys hosting game nights, parties, or family gatherings. May or may not be technical. Values novelty and group fun. |
+|                |                                                                                                                                                                     |
+|---------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|    **Profile** | Enjoys hosting game nights, parties, or family gatherings. May or may not be technical. Values novelty and group fun.                                               |
 | **Pain Point** | Commercial party games feel repetitive after a few sessions. Traditional consoles limit the number of players and require everyone to learn unfamiliar controllers. |
-| **Goal** | Access to a library of community-created games—and the option to create personalized ones—that any number of guests can join using only their phones. |
+|       **Goal** | Access to a library of community-created games—and the option to create personalized ones—that any number of guests can join using only their phones.               |
 
 ### Persona D: The Automotive Passenger
 
-| | |
-|---|---|
-| **Profile** | Families or individuals waiting during electric vehicle charging sessions or long stops. Passengers in parked vehicles with compatible infotainment screens. |
-| **Pain Point** | Boredom during charging stops or waiting periods with no shared entertainment option beyond individual phone screens. |
-| **Goal** | Instant access to multiplayer games on the car's infotainment screen, turning downtime into a shared social experience. |
+|                |                                                                                                                                                              |
+|---------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|    **Profile** | Families or individuals waiting during electric vehicle charging sessions or long stops. Passengers in parked vehicles with compatible infotainment screens. |
+| **Pain Point** | Boredom during charging stops or waiting periods with no shared entertainment option beyond individual phone screens.                                        |
+|       **Goal** | Instant access to multiplayer games on the car's infotainment screen, turning downtime into a shared social experience.                                      |
 
 ---
 
@@ -140,7 +140,7 @@ The phone screen transforms based on the game being played. The controller layou
 
 #### Private Information Display
 
-Because each phone screen is visible only to its owner, the controller can display secret game data. In a poker game, the player sees their cards privately. In a party game with hidden roles, the phone reveals the player's secret identity. This mechanic is fundamental to AirCade's design and is a core feature that creators are encouraged to leverage.
+Because each phone screen is visible only to its owner, the controller can display secret game data. In a poker game, the player sees their cards privately. At a party game with hidden roles, the phone reveals the player's secret identity. This mechanic is fundamental to AirCade's design and is a core feature that creators are encouraged to leverage.
 
 ---
 

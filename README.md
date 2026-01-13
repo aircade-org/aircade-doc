@@ -14,13 +14,13 @@ AirCade is a browser-based platform where you build multiplayer games in an inte
 
 - [Descriptions](./descriptions.md) - Taglines and product descriptions at various lengths.
 - [Overview](./overview.md) - What AirCade is and how it works.
-- [Product Requirements](./product_requirements_document.md) - Full PRD with personas, features, and user journeys.
+- [Product Requirements](./product_requirements.md) - Full PRD with personas, features, and user journeys.
 - [Specification](./specification.md) - Technical specification.
 - [Technical Stack](./technical-stack.md) - Technology choices.
-- [Milestone Roadmap](./milstones.md) - Milestone roadmap.
+- [Milestone Roadmap](./milestones.md) - Milestone roadmap.
 
-## Insprations
+## Inspirations
 
 - AirConsol:
-  - [Overview](./insprations/airconsol/overview.md)
-  - [Product](./insprations/airconsol/product_requirements.md)
+    - [Overview](./inspirations/airconsol/overview.md)
+    - [Product](./inspirations/airconsol/product_requirements.md)

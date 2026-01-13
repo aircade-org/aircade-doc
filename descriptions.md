@@ -16,4 +16,4 @@ AirCade is a cloud-based platform that combines a creative game studio with an i
 
 ## Long Description
 
-See [Product Requirements Document](./product_requirements_document.md).
+See [Product Requirements Document](./product_requirements.md).

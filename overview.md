@@ -4,7 +4,7 @@
 
 AirCade is a cloud-based platform that lets you create, share, and play multiplayer games using devices you already own. Unlike traditional game development tools or consoles, you do not need to buy specialized software, expensive hardware, or proprietary controllers. Everything runs in your web browser.
 
-The core concept combines two ideas: a creative studio where anyone can build games, and an instant-play platform where a room full of people can join using their smartphones as controllers. Your "big screen"—a laptop, a Smart TV, a tablet, or even a car's infotainment display—shows the game, while each player's phone becomes a custom controller designed by the game's creator. This makes AirCade uniquely suited for game nights, classrooms, parties, and any situation where a group wants to play together without setup hassle.
+The core concept combines two ideas: a creative studio where anyone can build games, and an instant-play platform where a room full of people can join using their smartphones as controllers. Your "big screen"-a laptop, a Smart TV, a tablet, or even a car's infotainment display—shows the game, while each player's phone becomes a custom controller designed by the game's creator. This makes AirCade uniquely suited for game nights, classrooms, parties, and any situation where a group wants to play together without setup hassle.
 
 ## How It Works
 

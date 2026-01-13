@@ -85,7 +85,7 @@ Both will integrate into the same dual-canvas architecture.
 │                              │                   │         │
 └──────────────────────────────┼───────────────────┼─────────┘
                                │                   │
-                     WebSocket + HTTP         HTML/JS/CSS
+                     WebSocket + HTTPS        HTML/TS/CSS
                                │                   │
                     ┌──────────┴───────────────────┴─────────┐
                     │                Browsers                │
@@ -101,11 +101,11 @@ Both will integrate into the same dual-canvas architecture.
 
 ## Summary
 
-| Layer         | Technology                   |
-|---------------|------------------------------|
-| Hosting       | Railway.com                  |
-| Database      | PostgreSQL                   |
-| Backend       | Rust, Axum, SeaORM           |
-| Frontend      | TypeScript, Next.js 16       |
-| Game Runtime  | JavaScript/TypeScript, p5.js |
-| Real-Time     | WebSockets (via Axum)        |
+|        Layer | Technology                   |
+|-------------:|:-----------------------------|
+|      Hosting | Railway.com                  |
+|     Database | PostgreSQL                   |
+|      Backend | Rust, Axum, SeaORM           |
+|     Frontend | TypeScript, Next.js 16       |
+| Game Runtime | JavaScript/TypeScript, p5.js |
+|    Real-Time | WebSockets (via Axum)        |

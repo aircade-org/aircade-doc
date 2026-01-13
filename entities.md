@@ -1,5 +1,3 @@
 # AirCade - Entities
 
 ## User
-
-TODO
