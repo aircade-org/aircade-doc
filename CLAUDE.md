@@ -2,37 +2,41 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Repository Purpose
+## What This Repository Is
 
-This is the **documentation and product specification hub** for AirCade — a browser-based platform for creating, sharing, and playing multiplayer games using smartphones as controllers. This repo contains no application code; the implementations live in separate repositories:
+This is the **documentation repository** for AirCade — a browser-based multiplayer game creation and play platform. It contains no source code. All files are Markdown specifications, requirements, and architecture documents.
 
-- **Backend API** (Rust): `github.com/aircade-org/aircade-api`
-- **Frontend Web** (TypeScript/Next.js): `github.com/aircade-org/aircade-web`
+The AirCade project spans three repositories:
+- **aircade-doc** (this repo) — Specifications and product documentation
+- **aircade-api** — Rust backend (Axum + SeaORM + PostgreSQL)
+- **aircade-web** — TypeScript/Next.js 16 frontend
 
-## Document Map
+## Repository Structure
 
-| File | Purpose |
-|------|---------|
-| `overview.md` | What AirCade is, how playing and creating works |
-| `product_requirements.md` | Full PRD: personas, features, dual-canvas architecture, gameplay lifecycle, publishing |
-| `technical-stack.md` | Technology choices, architecture diagram, hosting (Railway), backend (Rust/Axum/SeaORM), frontend (TS/Next.js 16), game runtime (p5.js) |
-| `descriptions.md` | Taglines and product descriptions at various lengths |
-| `milestones.md` | Milestone roadmap (template structure with `[Shared]`, `[Database]`, `[Backend]`, `[Frontend]` task labels) |
-| `specification.md` | Technical specification (placeholder) |
-| `airconsol/` | Documentation for AirConsole, the inspiration project |
+- `README.md` — Entry point with links to all repos and documents
+- `overview.md` — How AirCade works conceptually
+- `product_requirements.md` — Full PRD: personas, features, user journeys
+- `technical-stack.md` — Technology choices and architecture diagram
+- `descriptions.md` — Marketing copy at various lengths
+- `entities.md` — Entity definitions (in progress)
+- `specifications.md` — Technical specification (in progress)
+- `milestones.md` — Roadmap (template)
+- `inspirations/` — Competitor/inspiration analysis (AirConsol)
 
-## Key Concepts
+## Key Architecture Concepts
 
-- **Dual-canvas model**: Every game has two synchronized canvases — a Game Screen (big screen) and a Controller Screen (each player's phone). Both share game state via WebSockets.
-- **Three frontend experiences**: Creative Studio (code editor), Console (big screen lobby/game), Controller (smartphone touch interface).
-- **Session flow**: Host opens big screen → session code/QR displayed → players join on phones → game selected → play → seamless transition to next game.
+**Dual-canvas model** is the core technical differentiator: every game renders two synchronized canvases — a Game Screen (big screen/TV) and a Controller Screen (each player's smartphone). Both share game state via WebSockets.
 
-## Writing Conventions
+**Three frontend experiences** served from one Next.js app:
+1. Creative Studio — browser code editor for building games
+2. Console (Big Screen) — lobby, library, and game rendering
+3. Controller (Smartphone) — dynamic per-game touch interface
 
-- Milestone tasks are prefixed with scope labels: `[Shared]`, `[Database]`, `[Backend]`, `[Frontend]`.
-- The product tagline is *"Create. Play. Share."*
-- When referencing the platform tech stack: Rust/Axum/SeaORM (backend), TypeScript/Next.js 16 (frontend), p5.js (game runtime), PostgreSQL (database), Railway.com (hosting).
+**Game runtime** uses p5.js for 2D rendering. Creators write games in JavaScript/TypeScript.
 
-## No Build/Test/Lint
+## Writing Guidelines
 
-This is a pure documentation repository (markdown files only). There are no build commands, test suites, or linters to run.
+- This is a documentation-only repo. Changes are Markdown files — no build, lint, or test commands.
+- Keep documents internally consistent: if you change a concept name or architecture detail, check all other docs for references.
+- `product_requirements.md` is the authoritative source for feature definitions and user personas.
+- `technical-stack.md` is the authoritative source for technology choices.
