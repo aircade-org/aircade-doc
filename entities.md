@@ -10,7 +10,9 @@
 | `deletedAt`              | `TimeStamp` | _Nullable_              | The date and time when this account was soft deleted                                   | `null`                 |
 | `email`                  | `String`    | _Unique_, _Not Null_    | The user's email address, used for sign-in and notifications                           | `mike@example.com`     |
 | `username`               | `String`    | _Unique_, _Not Null_    | The user's unique public name, visible to other players and creators                   | `PixelMike`            |
-| `passwordHash`           | `String`    | _Not Null_              | The hashed password for authentication (actual password is never stored)               | *(not human-readable)* |
+| `passwordHash`           | `String`    | _Nullable_              | The hashed password for email & password authentication (null for OAuth-only accounts) | *(not human-readable)* |
+| `authProvider`           | `String`    | _Default: "email"_      | The method used to create the account: `email`, `google`, or `github`                  | `email`                |
+| `authProviderId`         | `String`    | _Nullable_, _Unique_    | The unique identifier from the OAuth provider (null for email & password accounts)     | `google\|1234567890`   |
 | `displayName`            | `String`    | _Nullable_              | An optional friendly name shown in lobbies and on the creator profile                  | `Mike Johnson`         |
 | `avatarUrl`              | `String`    | _Nullable_              | URL to the user's profile picture, shown in lobbies and leaderboards                   | `avatars/mike.png`     |
 | `bio`                    | `String`    | _Nullable_              | A short description the user writes about themselves, visible on their creator profile | `Party game addict`    |

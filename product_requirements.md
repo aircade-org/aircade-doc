@@ -99,7 +99,29 @@ To reduce the learning curve, the studio offers a library of starter templates. 
 
 ---
 
-### 3.2 The Big Screen Experience (The Console)
+### 3.2 Account Creation & Authentication
+
+AirCade supports user accounts so creators can save projects, publish games, and build a profile. Players can also optionally create accounts to track play history and favorites.
+
+#### Sign-Up and Login Methods
+
+Users can create an account and sign in using any of the following methods:
+
+- **Email & Password** - The classic approach. Users register with an email address and a password. Email verification is required before publishing games. Password reset is available via email.
+- **Google** - One-click sign-in using a Google account via OAuth 2.0. If no AirCade account exists, one is created automatically using the Google profile information.
+- **GitHub** - One-click sign-in using a GitHub account via OAuth 2.0. Particularly convenient for the developer-oriented creator audience. If no AirCade account exists, one is created automatically using the GitHub profile information.
+
+#### Account Linking
+
+A user who initially signs up with email & password can later link their Google or GitHub account (and vice versa), allowing them to sign in with any of their connected methods.
+
+#### No Account Required to Play
+
+Creating an account is **not** required to join a game session as a player. Anyone can scan the QR code or enter a Session Code and play immediately. Accounts are only needed for creating, publishing, and managing games.
+
+---
+
+### 3.3 The Big Screen Experience (The Console)
 
 The big screen is the shared display that turns any compatible device into a game console.
 
@@ -121,7 +143,7 @@ Once players join, their avatars and names appear in a visual lobby. From here, 
 
 ---
 
-### 3.3 The Controller Experience (The Smartphone)
+### 3.4 The Controller Experience (The Smartphone)
 
 The smartphone is the player's personal, private input device.
 
@@ -144,7 +166,7 @@ Because each phone screen is visible only to its owner, the controller can displ
 
 ---
 
-### 3.4 The Gameplay Lifecycle
+### 3.5 The Gameplay Lifecycle
 
 A typical AirCade session follows a streamlined flow designed to minimize friction and maximize time spent playing:
 

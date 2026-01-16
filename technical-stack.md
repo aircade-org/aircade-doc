@@ -34,6 +34,16 @@ The backend is written in **Rust** and exposes an HTTP/WebSocket API consumed by
 - Schema migration management
 - Compile-time model definitions that stay in sync with the database schema
 
+### Authentication
+
+The API handles user authentication with three sign-in methods:
+
+- **Email & Password** — Classic registration with hashed passwords and email verification
+- **Google OAuth 2.0** — One-click sign-in via Google accounts
+- **GitHub OAuth 2.0** — One-click sign-in via GitHub accounts
+
+OAuth flows are handled server-side. On first OAuth sign-in, an AirCade account is created automatically from the provider's profile data. Users can link multiple auth methods to a single account.
+
 ### Real-Time Communication
 
 Game sessions require low-latency, bidirectional communication between the big screen, player smartphones, and the server. This is handled via **WebSockets** through Axum's built-in WebSocket support. The server relays game state updates between connected clients within a session.
@@ -101,11 +111,12 @@ Both will integrate into the same dual-canvas architecture.
 
 ## Summary
 
-|        Layer | Technology                   |
-|-------------:|:-----------------------------|
-|      Hosting | Railway.com                  |
-|     Database | PostgreSQL                   |
-|      Backend | Rust, Axum, SeaORM           |
-|     Frontend | TypeScript, Next.js 16       |
-| Game Runtime | JavaScript/TypeScript, p5.js |
-|    Real-Time | WebSockets (via Axum)        |
+|        Layer | Technology                                   |
+|-------------:|:---------------------------------------------|
+|      Hosting | Railway.com                                  |
+|     Database | PostgreSQL                                   |
+|      Backend | Rust, Axum, SeaORM                           |
+|         Auth | Email & Password, Google OAuth, GitHub OAuth |
+|     Frontend | TypeScript, Next.js 16                       |
+| Game Runtime | JavaScript/TypeScript, p5.js                 |
+|    Real-Time | WebSockets (via Axum)                        |
