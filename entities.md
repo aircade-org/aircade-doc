@@ -2,6 +2,8 @@
 
 > **Note:** `FK -> (...)` stands for Foreign Key referencing another entity.
 
+---
+
 ## User
 
 A registered account on the platform. Users can create and publish games in the Creative Studio, host sessions, leave reviews, and manage their profile. An account is required for creation and publishing but not for playing.
