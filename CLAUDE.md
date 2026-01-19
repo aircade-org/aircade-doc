@@ -2,41 +2,39 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## What This Repository Is
+## Repository Purpose
 
-This is the **documentation repository** for AirCade — a browser-based multiplayer game creation and play platform. It contains no source code. All files are Markdown specifications, requirements, and architecture documents.
+This is the **documentation repository** for AirCade, a browser-based platform for building and playing multiplayer games using smartphones as controllers. The actual implementation lives in separate repos: `aircade-api` (Rust/Axum backend) and `aircade-web` (Next.js frontend).
 
-The AirCade project spans three repositories:
-- **aircade-doc** (this repo) — Specifications and product documentation
-- **aircade-api** — Rust backend (Axum + SeaORM + PostgreSQL)
-- **aircade-web** — TypeScript/Next.js 16 frontend
+This repo contains only Markdown documentation — there are no build, test, or lint commands.
 
-## Repository Structure
+## Documentation Structure
 
-- `README.md` — Entry point with links to all repos and documents
-- `overview.md` — How AirCade works conceptually
-- `product_requirements.md` — Full PRD: personas, features, user journeys
-- `technical-stack.md` — Technology choices and architecture diagram
-- `descriptions.md` — Marketing copy at various lengths
-- `entities.md` — Entity definitions (in progress)
-- `specifications.md` — Technical specification (in progress)
-- `milestones.md` — Roadmap (template)
-- `inspirations/` — Competitor/inspiration analysis (AirConsol)
+- `general/` — Product-level docs: overview, PRD with personas, descriptions, milestones
+- `app/shared/` — Cross-cutting technical docs: tech stack, entity definitions, specification
+- `app/api/` — Backend/API documentation (endpoints)
+- `app/db/` — Database documentation (placeholder)
+- `app/web/` — Frontend documentation (placeholder)
+- `inspirations/` — Competitor research (AirConsole analysis)
 
-## Key Architecture Concepts
+## Platform Architecture
 
-**Dual-canvas model** is the core technical differentiator: every game renders two synchronized canvases — a Game Screen (big screen/TV) and a Controller Screen (each player's smartphone). Both share game state via WebSockets.
+AirCade uses a **dual-canvas model**: every game renders a shared Game Screen (big screen/TV) and per-player Controller Screens (smartphones), synchronized via WebSockets.
 
-**Three frontend experiences** served from one Next.js app:
-1. Creative Studio — browser code editor for building games
-2. Console (Big Screen) — lobby, library, and game rendering
-3. Controller (Smartphone) — dynamic per-game touch interface
+**Tech stack of the described platform:**
+- **Backend:** Rust with Axum 0.8, SeaORM, PostgreSQL
+- **Frontend:** Next.js 16, React, TypeScript, shadcn/ui, Tailwind, Zustand
+- **Game Runtime:** JavaScript/TypeScript with p5.js
+- **Real-time:** WebSockets via Axum
+- **Hosting:** Railway.com (all services)
+- **Auth:** Email/password, Google OAuth 2.0, GitHub OAuth 2.0
 
-**Game runtime** uses p5.js for 2D rendering. Creators write games in JavaScript/TypeScript.
+## Database Schema
 
-## Writing Guidelines
+Entity definitions in `app/shared/entities.md` describe 17 entities using UUIDs, soft deletes, and foreign keys. Key entity groups: User/AuthProvider, Game/GameVersion/GameAsset, Session/Player, Review/Favorite/PlayHistory, Template/Collection.
 
-- This is a documentation-only repo. Changes are Markdown files — no build, lint, or test commands.
-- Keep documents internally consistent: if you change a concept name or architecture detail, check all other docs for references.
-- `product_requirements.md` is the authoritative source for feature definitions and user personas.
-- `technical-stack.md` is the authoritative source for technology choices.
+## Writing Conventions
+
+- Documentation follows standard Markdown formatting
+- Entity definitions use structured tables (Field, Type, Constraints, Description)
+- Tech stack docs include dependency version numbers
