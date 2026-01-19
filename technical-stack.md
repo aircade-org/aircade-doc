@@ -38,9 +38,9 @@ The backend is written in **Rust** and exposes an HTTP/WebSocket API consumed by
 
 The API handles user authentication with three sign-in methods:
 
-- **Email & Password** — Classic registration with hashed passwords and email verification
-- **Google OAuth 2.0** — One-click sign-in via Google accounts
-- **GitHub OAuth 2.0** — One-click sign-in via GitHub accounts
+- **Email & Password** - Classic registration with hashed passwords and email verification
+- **Google OAuth 2.0** - One-click sign-in via Google accounts
+- **GitHub OAuth 2.0** - One-click sign-in via GitHub accounts
 
 OAuth flows are handled server-side. On first OAuth sign-in, an AirCade account is created automatically from the provider's profile data. Users can link multiple auth methods to a single account.
 

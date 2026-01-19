@@ -17,6 +17,7 @@ AirCade is a browser-based platform where you build multiplayer games in an inte
 - [Product Requirements](./product_requirements.md) - Full PRD with personas, features, and user journeys.
 - [Specification](./specification.md) - Technical specification.
 - [Technical Stack](./technical-stack.md) - Technology choices.
+- [Entities](./entities.md) - AirCade entities definitions.
 - [Milestone Roadmap](./milestones.md) - Milestone roadmap.
 
 ## Inspirations

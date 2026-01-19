@@ -14,7 +14,7 @@ This gap means that hobbyist developers, students, educators, and creative profe
 
 ### The Solution
 
-AirCade is a cloud-based platform that unifies game creation and social play in a single seamless experience. It provides a browser-based creative studio where anyone can build games using visual coding tools, then instantly publish and play them on a shared "big screen" with friends, students, or colleagues—all using smartphones as controllers.
+AirCade is a cloud-based platform that unifies game creation and social play in a single seamless experience. It provides a browser-based creative studio where anyone can build games using visual coding tools, then instantly publish and play them on a shared "big screen" with friends, students, or colleagues-all using smartphones as controllers.
 
 No consoles, no downloads, no expensive hardware. A creator writes a game in AirCade's integrated development environment, and within seconds, a room full of people can join and play it by scanning a code on their phones.
 
@@ -53,7 +53,7 @@ AirCade sits at the intersection of three powerful trends: the maker movement in
 |---------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |    **Profile** | Enjoys hosting game nights, parties, or family gatherings. May or may not be technical. Values novelty and group fun.                                               |
 | **Pain Point** | Commercial party games feel repetitive after a few sessions. Traditional consoles limit the number of players and require everyone to learn unfamiliar controllers. |
-|       **Goal** | Access to a library of community-created games—and the option to create personalized ones—that any number of guests can join using only their phones.               |
+|       **Goal** | Access to a library of community-created games-and the option to create personalized ones-that any number of guests can join using only their phones.               |
 
 ### Persona D: The Automotive Passenger
 
@@ -79,7 +79,7 @@ The studio provides a professional-grade code editor directly in the browser. Th
 
 Every AirCade game is composed of two synchronized visual canvases that the creator designs simultaneously:
 
-- **The Game Screen:** This is what appears on the big screen (TV, laptop, projector). It displays the shared game world—the board, the arena, the scoreboard—visible to all players.
+- **The Game Screen:** This is what appears on the big screen (TV, laptop, projector). It displays the shared game world-the board, the arena, the scoreboard-visible to all players.
 - **The Controller Screen:** This is what appears on each player's smartphone. The creator designs this interface to show private controls (buttons, joysticks, steering wheels) and private information (hidden cards, secret roles, personal scores).
 
 Both canvases share the same underlying game state, meaning a button press on a player's phone immediately affects the shared game world on the big screen. The creator writes the logic for both screens within a single project, defining a setup phase (initial configuration) and a continuous update phase (real-time behavior) for each canvas.
@@ -131,7 +131,7 @@ Users access the AirCade console by opening a website or application on any devi
 
 #### Connection Hub
 
-Upon launch, the big screen prominently displays a unique, short-lived Session Code and a scannable QR code. This is the single point of entry for all players. The design prioritizes clarity—the code is large, high-contrast, and visible from across a room.
+Upon launch, the big screen prominently displays a unique, short-lived Session Code and a scannable QR code. This is the single point of entry for all players. The design prioritizes clarity-the code is large, high-contrast, and visible from across a room.
 
 #### Lobby and Game Library
 
