@@ -12,16 +12,26 @@ AirCade is a browser-based platform where you build multiplayer games in an inte
 
 ## Documents
 
-- [Descriptions](./descriptions.md) - Taglines and product descriptions at various lengths.
-- [Overview](./overview.md) - What AirCade is and how it works.
-- [Product Requirements](./product_requirements.md) - Full PRD with personas, features, and user journeys.
-- [Specification](./specification.md) - Technical specification.
-- [Technical Stack](./technical-stack.md) - Technology choices.
-- [Entities](./entities.md) - AirCade entities definitions.
-- [Milestone Roadmap](./milestones.md) - Milestone roadmap.
+### General
+
+- [Overview](general/overview.md) - What AirCade is and how it works.
+- [Descriptions](general/descriptions.md) - Taglines and product descriptions at various lengths.
+- [Product Requirements](general/product-requirements.md) - Full PRD with personas, features, and user journeys.
+- [Milestone Roadmap](general/milestones.md) - Milestone roadmap.
+
+### Application
+
+- Shared :
+    - [Technical Stack](app/shared/technical-stack.md) - Technology choices.
+    - [Specification](app/shared/specification.md) - Technical specification.
+    - [Entities](app/shared/entities.md) - AirCade entities definitions.
+- DataBase:
+- API (BackEnd):
+    - [Endpoints](./app/api/api-endpoints.md)
+- Web (FrontEnd):
 
 ## Inspirations
 
 - AirConsol:
     - [Overview](./inspirations/airconsol/overview.md)
-    - [Product](./inspirations/airconsol/product_requirements.md)
+    - [Product](inspirations/airconsol/product-requirements.md)
