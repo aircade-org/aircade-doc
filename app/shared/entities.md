@@ -24,6 +24,7 @@ A registered account on the platform. Users can create and publish games in the 
 | `subscriptionPlan`      | `String`    | _Default: "free"_       | The user's subscription tier: `free` or `pro`                                  | `free`                 |
 | `subscriptionExpiresAt` | `TimeStamp` | _Nullable_              | The date the Pro subscription expires (null for free-tier users)               | `2026-09-15T00:00:00Z` |
 | `accountStatus`         | `String`    | _Default: "active"_     | The account's current state: `active`, `suspended`, or `deactivated`           | `active`               |
+| `suspensionReason`      | `String`    | _Nullable_              | The reason the account was suspended (set by admin, cleared on restore)        | `null`                 |
 | `lastLoginAt`           | `TimeStamp` | _Nullable_              | The date and time of the user's last sign-in                                   | `2026-02-07T20:15:00Z` |
 | `lastLoginIp`           | `String`    | _Nullable_              | IP address of the user's last sign-in                                          | `192.168.1.42`         |
 
@@ -67,6 +68,7 @@ A game project created by a user in the Creative Studio. This is the central con
 | `minPlayers`           | `Integer`   | _Default: 1_                    | The minimum number of players required to start the game                | `2`                         |
 | `maxPlayers`           | `Integer`   | _Default: 8_                    | The maximum number of players supported                                 | `8`                         |
 | `status`               | `String`    | _Default: "draft"_              | The game's lifecycle state: `draft`, `published`, or `archived`         | `published`                 |
+| `moderationReason`     | `String`    | _Nullable_                      | Reason the game was archived by a moderator (null if not moderated)     | `null`                      |
 | `visibility`           | `String`    | _Default: "private"_            | Who can see the game in the library: `public`, `private`, or `unlisted` | `public`                    |
 | `remixable`            | `Boolean`   | _Default: false_                | Whether other creators are allowed to fork and remix this game          | `true`                      |
 | `forkedFromId`         | `UUID`      | _Nullable_, _FK -> Game_        | The original game this was forked from (null if original creation)      | `null`                      |
@@ -103,15 +105,17 @@ _Unique constraint on (`gameId`, `versionNumber`) - no duplicate version numbers
 
 Media files (images, sounds, sprites, fonts) uploaded by a creator and attached to a game project.
 
-| FIELD        | TYPE        | SPECIFICITY              | DESCRIPTION                                       | EXAMPLE                         |
-|:-------------|:------------|:-------------------------|:--------------------------------------------------|:--------------------------------|
-| `id`         | `UUID`      | _Unique_, _Primary Key_  | The asset unique identifier                       | `e1f2a3b4-5c6d-...`             |
-| `createdAt`  | `TimeStamp` | _Not Modifiable_         | The date and time when this asset was uploaded    | `2026-02-03T09:15:00Z`          |
-| `gameId`     | `UUID`      | _Not Null_, _FK -> Game_ | The game this asset belongs to                    | `d7a1c3e5-9f4b-...`             |
-| `fileName`   | `String`    | _Not Null_               | The original file name as uploaded by the creator | `spaceship.png`                 |
-| `fileType`   | `String`    | _Not Null_               | The MIME type of the file                         | `image/png`                     |
-| `fileSize`   | `Integer`   | _Not Null_               | The file size in bytes                            | `24576`                         |
-| `storageUrl` | `String`    | _Not Null_               | The URL or storage path where the file is stored  | `assets/d7a1c3e5/spaceship.png` |
+| FIELD        | TYPE        | SPECIFICITY              | DESCRIPTION                                                            | EXAMPLE                         |
+|:-------------|:------------|:-------------------------|:-----------------------------------------------------------------------|:--------------------------------|
+| `id`         | `UUID`      | _Unique_, _Primary Key_  | The asset unique identifier                                            | `e1f2a3b4-5c6d-...`             |
+| `createdAt`  | `TimeStamp` | _Not Modifiable_         | The date and time when this asset was uploaded                         | `2026-02-03T09:15:00Z`          |
+| `deletedAt`  | `TimeStamp` | _Nullable_               | The date and time when this asset was soft-deleted (via game deletion) | `null`                          |
+| `gameId`     | `UUID`      | _Not Null_, _FK -> Game_ | The game this asset belongs to                                         | `d7a1c3e5-9f4b-...`             |
+| `fileName`   | `String`    | _Not Null_               | The original file name as uploaded by the creator                      | `spaceship.png`                 |
+| `fileType`   | `String`    | _Not Null_               | The MIME type of the file                                              | `image/png`                     |
+| `fileSize`   | `Integer`   | _Not Null_               | The file size in bytes                                                 | `24576`                         |
+| `fileData`   | `Binary`    | _Not Null_               | The file content stored as binary data in the database                 | *(binary data)*                 |
+| `storageUrl` | `String`    | _Not Null_               | The internal identifier / URL path used to serve the file via the API  | `assets/d7a1c3e5/spaceship.png` |
 
 ---
 
@@ -151,7 +155,7 @@ A live play session hosted on a big screen. Created when a host launches AirCade
 | `createdAt`     | `TimeStamp` | _Not Modifiable_                | The date and time when the session was created                        | `2026-02-07T19:00:00Z` |
 | `updatedAt`     | `TimeStamp` |                                 | The date and time when the session was last updated                   | `2026-02-07T19:45:00Z` |
 | `endedAt`       | `TimeStamp` | _Nullable_                      | The date and time when the session ended (null while active)          | `null`                 |
-| `hostId`        | `UUID`      | _Nullable_, _FK -> User_        | The user hosting the session (null for anonymous hosts)               | `a8f3e7b1-4c2d-...`    |
+| `hostId`        | `UUID`      | _Not Null_, _FK -> User_        | The user hosting the session (account required to host)               | `a8f3e7b1-4c2d-...`    |
 | `gameId`        | `UUID`      | _Nullable_, _FK -> Game_        | The game currently loaded in this session (null while in lobby)       | `d7a1c3e5-9f4b-...`    |
 | `gameVersionId` | `UUID`      | _Nullable_, _FK -> GameVersion_ | The specific published version being played (null while in lobby)     | `b2d4f6a8-1c3e-...`    |
 | `sessionCode`   | `String`    | _Unique_, _Not Null_            | The short-lived code displayed on the big screen for players to join  | `XKCD42`               |

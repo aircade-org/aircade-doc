@@ -8,7 +8,9 @@
 
 ## Database
 
-**PostgreSQL** serves as the sole persistent data store. It handles user accounts, game project metadata, published game assets, session records, community content (ratings, reviews), and subscription state.
+**PostgreSQL** serves as the sole persistent data store. It handles user accounts, game project metadata, session records, community content (ratings, reviews), and subscription state.
+
+**File storage** is handled directly in the database. Uploaded files (avatars, game assets, thumbnails) are stored as binary data in PostgreSQL rather than using an external file storage service. The `storageUrl` fields on entities like `GameAsset` serve as internal identifiers that the API resolves to serve the file content via a dedicated file-serving endpoint. This simplifies the infrastructure by keeping everything within a single data store. The API serves stored files with appropriate `Content-Type` headers and caching directives.
 
 PostgreSQL is accessed exclusively through SeaORM on the backend (see below). No raw SQL is written in application code.
 
@@ -43,6 +45,10 @@ The API handles user authentication with three sign-in methods:
 - **GitHub OAuth 2.0** - One-click sign-in via GitHub accounts
 
 OAuth flows are handled server-side. On first OAuth sign-in, an AirCade account is created automatically from the provider's profile data. Users can link multiple auth methods to a single account.
+
+### Email
+
+There is no email sending service integrated into the platform. Email verification and password reset flows use token-based URLs that the backend generates and the frontend displays or logs. In production, an email delivery service may be added in the future but is not part of the initial implementation. Email-dependent flows (verification, password reset) rely on the backend generating tokens that are validated through the API — the delivery mechanism is out of scope for the initial launch.
 
 ### Real-Time Communication
 

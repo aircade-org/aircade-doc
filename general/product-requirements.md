@@ -179,7 +179,7 @@ A typical AirCade session follows a streamlined flow designed to minimize fricti
 
 ---
 
-### 3.5 Publishing and Community
+### 3.6 Publishing and Community
 
 A game created in AirCade is only a click away from being available to the world.
 

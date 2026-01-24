@@ -29,6 +29,15 @@ On successful sign-in, the system updates `User.lastLoginAt` and `User.lastLogin
 
 A signed-in user can link additional auth providers to their account. The system creates a new `AuthProvider` record pointing to the same `User`. Each provider can only be linked once per user (enforced by the unique constraint on `userId` + `provider`). A provider ID that is already linked to a different user cannot be re-linked.
 
+### 1.3.1 OAuth Email Conflict Resolution
+
+If a user attempts to sign in via Google or GitHub OAuth and the OAuth provider's email matches an existing AirCade account registered through a different method, the system returns a `409 Conflict` error. The response message instructs the user to:
+
+1. Sign in using their existing account (email/password or the originally linked OAuth provider).
+2. Navigate to account settings and manually link the new OAuth provider.
+
+The system does **not** auto-link providers or auto-merge accounts. This prevents unauthorized account takeover if someone gains access to an OAuth account with a matching email address.
+
 ### 1.4 Email Verification
 
 - When a user signs up with email/password, `User.emailVerified` is set to `false`.
@@ -44,7 +53,13 @@ A signed-in user can link additional auth providers to their account. The system
 - The user follows the link, submits a new password, and the system updates `AuthProvider.passwordHash` and clears the token.
 - The token is single-use and expires after the time defined in `AuthProvider.tokenExpiresAt`.
 
-### 1.6 Authorization Rules
+### 1.6 Token Lifecycle
+
+- **Access tokens** are short-lived JWTs (15 minutes) containing the user's ID and role. They are stateless — the server validates them using the JWT secret without a database lookup.
+- **Refresh tokens** are longer-lived JWTs (7 days). They are stored in a server-side allowlist (in the database) and are invalidated on sign-out. Each refresh returns a new access token and a new refresh token (rotation), and the previous refresh token is invalidated.
+- **Verification tokens** (email verification, password reset) are single-use, random strings stored in `AuthProvider.verificationToken` with an expiration of 24 hours in `AuthProvider.tokenExpiresAt`.
+
+### 1.7 Authorization Rules
 
 | Role          | Capabilities                                                                                                                                             |
 |:--------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -53,7 +68,7 @@ A signed-in user can link additional auth providers to their account. The system
 | **Moderator** | Everything a user can do, plus: manage reported content, remove inappropriate reviews, archive games that violate guidelines.                            |
 | **Admin**     | Full platform access: manage users (suspend, deactivate), manage collections and templates, assign moderator roles, view platform analytics.             |
 
-### 1.7 Account Status
+### 1.8 Account Status
 
 | Status          | Effect                                                                                                                                                     |
 |:----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -69,11 +84,13 @@ A signed-in user can link additional auth providers to their account. The system
 
 Users manage the following profile information:
 
-- **username** - Unique, public. Used in URLs and @mentions. Cannot be changed to a username currently held by another user.
+- **username** - Unique, public. Used in URLs and @mentions. Cannot be changed to a username currently held by another user. Changed via a dedicated endpoint.
 - **displayName** - Optional friendly name shown in lobbies and on the creator profile page.
-- **email** - Unique. Used for sign-in and notifications. Changing the email requires re-verification.
+- **email** - Unique. Used for sign-in and notifications. Changing the email requires re-verification. For users with an email auth provider, the current password is required for confirmation. Users who only have OAuth providers linked can change their email without a password.
 - **avatarUrl** - Profile picture. Users can upload an image or use a default generated avatar.
 - **bio** - Short free-text description visible on the user's public profile.
+
+> **OAuth-only accounts:** Users who signed up exclusively via Google or GitHub and have no email/password auth provider can perform sensitive actions (email change, account deactivation) without a password. The system verifies their identity through the active authenticated session. If higher security is needed, they should first link an email/password provider to their account.
 
 ### 2.2 Public Profile
 
@@ -82,6 +99,8 @@ Every user with at least one published game has a public profile page showing:
 - Username, display name, avatar, and bio.
 - Published games (sorted by most recent).
 - Aggregate statistics: total games published, total play count across all games.
+
+> **Note:** Users who have not published any games do not have a public profile. The public profile endpoint returns `404` for users with no published games, deactivated accounts, or non-existent usernames. This is intentional — public profiles are a creator-facing feature, and having published content is a prerequisite for visibility.
 
 ---
 
@@ -102,6 +121,16 @@ draft ──► published ──► archived
 | **draft**     | The game is being developed in the Creative Studio. Only the creator can see and test it.                                                                                         |
 | **published** | The game is live in the library. Players can discover and play it. The creator can continue editing the draft and publish updates.                                                |
 | **archived**  | The game is removed from public discovery. Existing direct links still work but the game cannot be loaded into new sessions. The creator can return it to `draft` or `published`. |
+
+**Allowed state transitions:**
+
+| From        | To          | Trigger                                                                               |
+|:------------|:------------|:--------------------------------------------------------------------------------------|
+| `draft`     | `published` | Creator publishes the game (creates a `GameVersion`).                                 |
+| `published` | `archived`  | Creator or moderator archives the game.                                               |
+| `published` | `draft`     | Not allowed. A published game cannot revert to draft. Archive first if needed.        |
+| `archived`  | `published` | Creator unarchives a game that has a `publishedVersionId` (was previously published). |
+| `archived`  | `draft`     | Creator unarchives a game that has no `publishedVersionId` (was never published).     |
 
 ### 3.2 Visibility
 
@@ -151,7 +180,7 @@ Creators can upload media files (images, sounds, sprites, fonts) to use in their
 
 - Each asset is linked to a single game via `GameAsset.gameId`.
 - Supported file types are validated on upload (images: PNG, JPG, SVG, GIF; audio: MP3, WAV, OGG; fonts: TTF, WOFF2).
-- Assets are stored at a platform-managed storage URL and are accessible from game code at runtime.
+- Assets are stored in the database and served via the API at their `storageUrl` path. Asset files for published games are publicly accessible (no authentication required) so that game code running in any player's browser can load them at runtime. The asset management endpoints (list, upload, delete) remain creator-only.
 - Deleting a game soft-deletes its assets. Assets are not independently versioned.
 
 ### 3.7 Tags
@@ -202,6 +231,8 @@ The creator writes the setup and update logic for both the Game Screen and the C
 
 All technologies integrate into the same dual-canvas model.
 
+> **Validation:** At launch, the API only accepts `"p5js"` as the `technology` value. Requests with `"3d"` or `"visual"` are rejected with a `400` validation error. The schema stores these as a string to allow future expansion without migrations.
+
 ### 4.4 Game State Synchronization
 
 Game state is synchronized between the Game Screen and Controller Screens through the server's WebSocket layer:
@@ -211,12 +242,46 @@ Game state is synchronized between the Game Screen and Controller Screens throug
 - The server acts as a relay within a session. It does not interpret or validate game logic - the game code running in the browsers handles all game rules.
 - The server ensures that messages are routed only within the session they belong to.
 
-### 4.5 Runtime Isolation
+### 4.5 Game Runtime API
 
-- Each game runs in a sandboxed execution context within the browser.
-- Games cannot access browser APIs outside of the platform-provided runtime (DOM manipulation outside the canvas, localStorage, navigation, etc.).
-- Games cannot communicate with external servers. All communication goes through the platform's WebSocket layer.
-- The platform provides a controlled API for games to interact with session data (player list, player input, game state broadcast).
+The platform injects a runtime API into the game's sandboxed execution context. This API is the only way game code interacts with session data and other players. The API is available as a global `AirCade` object in both canvases.
+
+#### Game Screen API (available in Game Screen code)
+
+| Function / Property                    | Description                                                                                                  |
+|:---------------------------------------|:-------------------------------------------------------------------------------------------------------------|
+| `AirCade.getPlayers()`                 | Returns an array of currently connected players: `[{ id, displayName, avatarUrl }]`.                         |
+| `AirCade.onPlayerJoin(callback)`       | Registers a callback invoked when a player joins. Callback receives the player object.                       |
+| `AirCade.onPlayerLeave(callback)`      | Registers a callback invoked when a player leaves. Callback receives the player ID.                          |
+| `AirCade.onPlayerInput(callback)`      | Registers a callback invoked when any player sends input. Callback receives `{ playerId, inputType, data }`. |
+| `AirCade.broadcastState(state)`        | Sends a game state object to all connected Controller Screens. `state` is any JSON-serializable object.      |
+| `AirCade.sendToPlayer(playerId, data)` | Sends data to a specific player's Controller Screen.                                                         |
+| `AirCade.getSessionInfo()`             | Returns session metadata: `{ sessionId, sessionCode, status, maxPlayers }`.                                  |
+
+#### Controller Screen API (available in Controller Screen code)
+
+| Function / Property                  | Description                                                                                                                     |
+|:-------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------|
+| `AirCade.getPlayer()`                | Returns the current player's info: `{ id, displayName, avatarUrl }`.                                                            |
+| `AirCade.sendInput(inputType, data)` | Sends input to the Game Screen. `inputType` is a string label (e.g., `"button_press"`), `data` is any JSON-serializable object. |
+| `AirCade.onStateUpdate(callback)`    | Registers a callback invoked when the Game Screen broadcasts state. Callback receives the state object.                         |
+| `AirCade.onPrivateMessage(callback)` | Registers a callback invoked when the Game Screen sends data to this specific player.                                           |
+| `AirCade.setReady(ready)`            | Signals that this player is ready (or not). The Game Screen receives this via `onPlayerInput` with `inputType: "player_ready"`. |
+| `AirCade.getSessionInfo()`           | Returns session metadata: `{ sessionId, sessionCode, status, maxPlayers }`.                                                     |
+
+#### Common Rules
+
+- All data passed through the runtime API must be JSON-serializable.
+- The runtime API is the sole communication channel between canvases. Direct WebSocket access is not exposed to game code.
+- Callbacks are invoked asynchronously. Game code should not rely on synchronous responses.
+- The `AirCade` object is injected by the platform before the game's setup phase runs.
+
+### 4.6 Runtime Isolation
+
+- Each game runs in a sandboxed execution context within the browser (sandboxed iframe).
+- Games cannot access browser APIs outside the platform-provided runtime (DOM manipulation outside the canvas, localStorage, navigation, etc.).
+- Games cannot communicate with external servers. All communication goes through the platform's WebSocket layer via the `AirCade` runtime API.
+- The platform provides the `AirCade` global object (described in 4.5) as the controlled API for games to interact with session data.
 
 ---
 
@@ -225,9 +290,15 @@ Game state is synchronized between the Game Screen and Controller Screens throug
 ### 5.1 Session Lifecycle
 
 ```
+             ┌──────────────────────┐
+             ▼                      │
 lobby ──► playing ──► paused ──► playing ──► ended
-                        │                      ▲
-                        └──────────────────────┘
+  ▲          │                                 ▲
+  │          │                                 │
+  └──────────┘ (unload game / game ends)       │
+  │                                            │
+  └────────────────────────────────────────────┘
+        (host ends session from any state)
 ```
 
 | State       | Description                                                                                                                      |
@@ -243,7 +314,7 @@ lobby ──► playing ──► paused ──► playing ──► ended
 2. The system creates a `Session` record with status `lobby`.
 3. A unique `sessionCode` is generated - a short, human-readable alphanumeric string (e.g., `XKCD42`). The code is unique among all currently active (non-ended) sessions.
 4. The big screen displays the session code and a QR code that encodes the join URL with the session code.
-5. If the host is signed in, `Session.hostId` is set to their user ID. Anonymous hosting is supported (`hostId` is null).
+5. The host must be a signed-in user. `Session.hostId` is set to their user ID. All session management endpoints (game loading, pausing, player removal, etc.) require authentication as the host user. Anonymous session creation is not supported — a user account is required to host sessions.
 
 ### 5.3 Joining a Session
 
@@ -259,12 +330,21 @@ lobby ──► playing ──► paused ──► playing ──► ended
 
 - Codes consist of uppercase letters and digits, excluding visually ambiguous characters (0/O, 1/I/L).
 - Codes are 4–6 characters long, providing sufficient uniqueness for concurrent sessions.
-- A code is valid only for the lifetime of its session. Once a session ends, its code can be reused by a future session.
+- A code is valid only for the lifetime of its session. Once a session ends, its code can be reused by a future session after a 5-minute cooldown period to prevent confusion with recently-ended sessions.
 - Codes are case-insensitive on input.
+
+### 5.4.1 Session Identifier Design
+
+The API uses two different identifiers for sessions depending on context:
+
+- **`sessionCode`** (human-readable, e.g., `XKCD42`) — Used in player-facing endpoints where the user knows the code: `GET /sessions/{sessionCode}` (lookup) and `POST /sessions/{sessionCode}/join` (join).
+- **`sessionId`** (UUID) — Used in host-facing management endpoints where the host received the UUID at session creation: `PATCH /sessions/{sessionId}`, `DELETE /sessions/{sessionId}`, game load/unload, pause/resume, player management, and the WebSocket connection.
+
+This separation ensures players only need the short code, while host operations use the stable UUID.
 
 ### 5.5 Player Management
 
-- **Max players:** Enforced at join time based on `Session.maxPlayers` and the current game's `maxPlayers` (the lower value applies).
+- **Max players:** Enforced at join time based on `Session.maxPlayers` and the current game's `maxPlayers` (the lower value applies). When loading a game into a session, if the number of currently connected players exceeds the game's `maxPlayers`, the load request is rejected with a `422` error. The host must remove excess players before loading that game.
 - **Disconnection:** If a player's WebSocket connection drops, `Player.connectionStatus` is set to `disconnected`. The player slot is preserved for a reconnection grace period. If the player reconnects within that period, their state is restored.
 - **Leaving:** A player can voluntarily leave a session. `Player.leftAt` is set and `connectionStatus` becomes `disconnected`. Their slot is freed.
 - **Host privileges:** The host can remove players from the session.
@@ -331,6 +411,8 @@ The Creative Studio is a browser-based development environment where authenticat
 - Creators can start a private test session directly from the studio.
 - The test session behaves like a real session: it generates a session code, and other devices can join as players.
 - Test sessions use the current draft code (not a published version), allowing rapid iteration.
+- **Implementation:** The session creation API accepts an optional `testGameId` parameter. When provided, the session bypasses the normal "load published game" flow and instead loads the game's current draft `gameScreenCode` and `controllerScreenCode` directly from the `Game` record. The `testGameId` must belong to the authenticated user. Test sessions are functionally identical to regular sessions but skip the publishing requirement.
+- Test sessions do not create `PlayHistory` records and do not increment `Game.playCount` or `Game.totalPlayTime`.
 
 ### 6.5 Templates
 
@@ -381,7 +463,7 @@ A game's detail page shows:
 
 ### 7.5 Collections
 
-- Collections are curated groups of games managed by platform staff (`moderator` or `admin` roles).
+- Collections are curated groups of games managed by platform staff. Moderators and admins can create, update, and manage collection contents. Only admins can delete collections.
 - Each collection has a title, description, and cover image.
 - Collections are displayed on the library's featured section, ordered by `Collection.sortOrder`.
 - Only `active` collections are visible.
@@ -394,6 +476,7 @@ A game's detail page shows:
 ### 8.1 Reviews
 
 - Only authenticated users can submit reviews.
+- A user cannot review their own game (enforced at the API level — the creator's `userId` cannot match the review's `userId` for the same `gameId`).
 - A user can review a game at most once (enforced by the unique constraint on `userId` + `gameId`).
 - A review consists of a star rating (integer, 1–5), an optional title, and an optional body text.
 - Reviews can be edited by the author and soft-deleted by the author or a moderator.
@@ -426,24 +509,29 @@ Creators can view statistics for their published games:
 
 ### 9.1 Subscription Tiers
 
-| Feature                       | Free    | Pro          |
-|:------------------------------|:--------|:-------------|
-| Play games                    | Yes     | Yes          |
-| Create and publish games      | Yes     | Yes          |
-| Game library access           | Limited | Full library |
-| Intermissions during sessions | Yes     | No           |
-| Max players per session       | Limited | Unlimited    |
-| Advanced creation tools       | Basic   | Full access  |
+| Feature                       | Free                                                | Pro          |
+|:------------------------------|:----------------------------------------------------|:-------------|
+| Play games                    | Yes                                                 | Yes          |
+| Create and publish games      | Yes                                                 | Yes          |
+| Game library access           | Full library (some games may be marked as Pro-only) | Full library |
+| Intermissions during sessions | Yes (every 10 minutes)                              | No           |
+| Max players per session       | 8 players                                           | Unlimited    |
+| Max games per creator         | 5 published games                                   | Unlimited    |
+| Max assets per game           | 20 assets                                           | 50 assets    |
+| Game code size per canvas     | 100 KB                                              | 500 KB       |
 
 ### 9.2 Subscription Management
 
 - Subscription state is stored on the `User` entity: `subscriptionPlan` (`free` or `pro`) and `subscriptionExpiresAt`.
 - When a Pro subscription expires, the user reverts to the `free` plan.
 - Subscription status is checked at session creation and game load to enforce tier-based limits.
+- **For the initial launch, there is no self-service payment or checkout flow.** Subscriptions are managed exclusively by admins via the `PATCH /api/v1/admin/users/{userId}` endpoint, which can set `subscriptionPlan` and `subscriptionExpiresAt`. A payment provider integration may be added in a future phase.
 
 ### 9.3 Intermissions
 
-- Free-tier sessions include periodic intermissions (brief pauses between games or at timed intervals).
+- Free-tier sessions include periodic intermissions: a brief pause is injected every 10 minutes of continuous gameplay within a single session.
+- Intermissions last approximately 15 seconds and display a platform-branded overlay on the Console screen.
+- The intermission timer resets when a new game is loaded into the session.
 - Pro-tier sessions skip intermissions entirely.
 - The intermission schedule is controlled server-side and is not influenced by game code.
 
@@ -473,34 +561,39 @@ All moderation actions use soft deletes (`deletedAt` timestamps). Soft-deleted r
 
 ### 11.1 Session Constraints
 
-| Constraint                    | Value / Rule                                                        |
-|:------------------------------|:--------------------------------------------------------------------|
-| Session code length           | 4–6 alphanumeric characters                                         |
-| Max concurrent players (free) | Platform-defined limit (enforced at join)                           |
-| Max concurrent players (pro)  | Unlimited (up to system capacity)                                   |
-| Reconnection grace period     | Time window after disconnect before a player slot is freed          |
-| Session timeout               | Idle sessions (no activity) are automatically ended after a timeout |
+| Constraint                    | Value / Rule                                                                       |
+|:------------------------------|:-----------------------------------------------------------------------------------|
+| Session code length           | 4–6 uppercase alphanumeric characters (excluding 0/O, 1/I/L)                       |
+| Max concurrent players (free) | 8 players per session                                                              |
+| Max concurrent players (pro)  | Unlimited (up to system capacity)                                                  |
+| Reconnection grace period     | 30 seconds after disconnect before a player slot is freed                          |
+| Session timeout               | Idle sessions (no activity) are automatically ended after 30 minutes of inactivity |
 
 ### 11.2 Game Constraints
 
-| Constraint            | Value / Rule                                                         |
-|:----------------------|:---------------------------------------------------------------------|
-| `minPlayers`          | Integer, minimum 1                                                   |
-| `maxPlayers`          | Integer, must be ≥ `minPlayers`                                      |
-| Game code size        | Maximum allowed size for `gameScreenCode` and `controllerScreenCode` |
-| Asset upload size     | Maximum file size per asset                                          |
-| Assets per game       | Maximum number of assets per game                                    |
-| Supported asset types | Images: PNG, JPG, SVG, GIF. Audio: MP3, WAV, OGG. Fonts: TTF, WOFF2. |
+| Constraint            | Value / Rule                                                                 |
+|:----------------------|:-----------------------------------------------------------------------------|
+| `minPlayers`          | Integer, minimum 1                                                           |
+| `maxPlayers`          | Integer, must be ≥ `minPlayers`                                              |
+| Game code size        | 500 KB maximum per canvas (`gameScreenCode` and `controllerScreenCode` each) |
+| Asset upload size     | 5 MB maximum per asset file                                                  |
+| Assets per game       | 50 assets maximum per game                                                   |
+| Supported asset types | Images: PNG, JPG, SVG, GIF. Audio: MP3, WAV, OGG. Fonts: TTF, WOFF2.         |
 
 ### 11.3 User Constraints
 
-| Constraint  | Value / Rule                                                        |
-|:------------|:--------------------------------------------------------------------|
-| Username    | Unique, alphanumeric with limited special characters, length limits |
-| Email       | Must be a valid email format, unique across the platform            |
-| Password    | Minimum length and complexity requirements                          |
-| Review text | Maximum character length for title and body                         |
-| Bio         | Maximum character length                                            |
+| Constraint       | Value / Rule                                                                                          |
+|:-----------------|:------------------------------------------------------------------------------------------------------|
+| Username         | Unique, 3–30 characters, alphanumeric plus hyphens and underscores, must start with a letter          |
+| Display name     | 1–50 characters                                                                                       |
+| Email            | Must be a valid email format, unique across the platform                                              |
+| Password         | Minimum 8 characters, must contain at least one uppercase letter, one lowercase letter, and one digit |
+| Avatar           | PNG, JPG, SVG, or GIF, maximum 2 MB                                                                   |
+| Bio              | Maximum 500 characters                                                                                |
+| Review title     | Maximum 100 characters                                                                                |
+| Review body      | Maximum 2000 characters                                                                               |
+| Game title       | 1–100 characters                                                                                      |
+| Game description | Maximum 2000 characters                                                                               |
 
 ---
 
@@ -512,9 +605,21 @@ All entities use UUIDs as primary keys. UUIDs are generated server-side at recor
 
 ### 12.2 Timestamps
 
-- All entities include `createdAt` (immutable, set at creation) and `updatedAt` (set at creation, updated on modification).
+- Most entities include `createdAt` (immutable, set at creation) and `updatedAt` (set at creation, updated on modification).
 - `createdAt` is never modified after initial creation.
 - All timestamps are stored and transmitted in UTC (ISO 8601 format).
+
+**Exceptions to the `createdAt`/`updatedAt` convention:**
+
+| Entity           | Reason                                                                                                                                                                       |
+|:-----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `GameVersion`    | Immutable snapshot — has `createdAt` only. No `updatedAt` because versions are never modified.                                                                               |
+| `GameAsset`      | Has `createdAt` only. Assets are replaced by deleting and re-uploading, not edited in place.                                                                                 |
+| `Tag`            | Platform-managed seed data — no timestamps. Tags are created at seed time and rarely change.                                                                                 |
+| `GameTag`        | Join table — no timestamps. The relationship is set or removed atomically.                                                                                                   |
+| `CollectionGame` | Join table — no timestamps. The relationship is set or removed atomically via the set-collection API.                                                                        |
+| `Favorite`       | Has `createdAt` only. Favorites are toggled (created/deleted), never edited.                                                                                                 |
+| `PlayHistory`    | Has `playedAt` (serves as `createdAt`). `duration` is updated when the game ends but no `updatedAt` is tracked — the update is a one-time finalization, not an ongoing edit. |
 
 ### 12.3 Soft Deletes
 
@@ -524,7 +629,7 @@ Entities that support soft deletion include a nullable `deletedAt` timestamp. Wh
 - The record remains in the database and can be restored.
 - Cascading soft deletes are not automatic - related records must be handled explicitly.
 
-Entities with soft deletes: `User`, `Game`, `Review`.
+Entities with soft deletes: `User`, `Game`, `GameAsset`, `Review`.
 
 ### 12.4 Cached Aggregates
 

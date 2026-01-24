@@ -678,7 +678,7 @@ PATCH /api/v1/users/me
 |:------|:-------------------------------|
 | `400` | A field exceeds length limits. |
 
-> **Note:** `username` and `email` are changed through dedicated endpoints because they involve uniqueness checks and verification flows.
+> **Note:** `username` and `email` are changed through dedicated endpoints (`PATCH /users/me/username` and `PATCH /users/me/email`) because they involve uniqueness checks and verification flows.
 
 ---
 
@@ -770,7 +770,40 @@ DELETE /api/v1/users/me/avatar
 
 ---
 
-### 3.6 Change Email
+### 3.6 Change Username
+
+Updates the authenticated user's username. Subject to uniqueness validation.
+
+```
+PATCH /api/v1/users/me/username
+```
+
+**Auth:** User
+
+**Request Body:**
+
+| Field         | Type     | Required | Description                                                               |
+|:--------------|:---------|:---------|:--------------------------------------------------------------------------|
+| `newUsername` | `string` | Yes      | The new username. 3–30 characters, alphanumeric plus hyphens/underscores. |
+
+**Response:** `200 OK`
+
+```json
+{
+  "username": "NewPixelMike"
+}
+```
+
+**Errors:**
+
+| Code  | Condition                                  |
+|:------|:-------------------------------------------|
+| `409` | The new username is already in use.        |
+| `400` | Username does not meet format constraints. |
+
+---
+
+### 3.7 Change Email
 
 Updates the user's email address and triggers re-verification.
 
@@ -782,10 +815,10 @@ PATCH /api/v1/users/me/email
 
 **Request Body:**
 
-| Field      | Type     | Required | Description                        |
-|:-----------|:---------|:---------|:-----------------------------------|
-| `newEmail` | `string` | Yes      | The new email.                     |
-| `password` | `string` | Yes      | Current password for confirmation. |
+| Field      | Type     | Required | Description                                                                                        |
+|:-----------|:---------|:---------|:---------------------------------------------------------------------------------------------------|
+| `newEmail` | `string` | Yes      | The new email.                                                                                     |
+| `password` | `string` | Cond.    | Required if the user has an email auth provider. Omit if the user only has OAuth providers linked. |
 
 **Response:** `200 OK`
 
@@ -801,14 +834,14 @@ Sets `emailVerified` to `false` and sends a new verification email.
 
 **Errors:**
 
-| Code  | Condition                        |
-|:------|:---------------------------------|
-| `409` | The new email is already in use. |
-| `401` | Password is incorrect.           |
+| Code  | Condition                                                      |
+|:------|:---------------------------------------------------------------|
+| `409` | The new email is already in use.                               |
+| `401` | Password is incorrect (when an email auth provider is linked). |
 
 ---
 
-### 3.7 Deactivate Account
+### 3.8 Deactivate Account
 
 Soft-deletes the authenticated user's account. Profile and published games are hidden. Data is retained for potential reactivation.
 
@@ -820,9 +853,9 @@ DELETE /api/v1/users/me
 
 **Request Body:**
 
-| Field      | Type     | Required | Description                        |
-|:-----------|:---------|:---------|:-----------------------------------|
-| `password` | `string` | Yes      | Current password for confirmation. |
+| Field      | Type     | Required | Description                                                                                        |
+|:-----------|:---------|:---------|:---------------------------------------------------------------------------------------------------|
+| `password` | `string` | Cond.    | Required if the user has an email auth provider. Omit if the user only has OAuth providers linked. |
 
 **Response:** `204 No Content`
 
@@ -830,13 +863,13 @@ Sets `User.accountStatus` to `"deactivated"` and sets `User.deletedAt`.
 
 **Errors:**
 
-| Code  | Condition              |
-|:------|:-----------------------|
-| `401` | Password is incorrect. |
+| Code  | Condition                                                      |
+|:------|:---------------------------------------------------------------|
+| `401` | Password is incorrect (when an email auth provider is linked). |
 
 ---
 
-### 3.8 Get Creator Statistics
+### 3.9 Get Creator Statistics
 
 Returns aggregate statistics for the authenticated user's published games.
 
@@ -1546,13 +1579,14 @@ Creates a new live session in lobby status and generates a unique session code.
 POST /api/v1/sessions
 ```
 
-**Auth:** None (anonymous hosting supported), User (optional)
+**Auth:** User
 
 **Request Body:**
 
-| Field        | Type      | Required | Default | Description              |
-|:-------------|:----------|:---------|:--------|:-------------------------|
-| `maxPlayers` | `integer` | No       | `8`     | Maximum players allowed. |
+| Field        | Type      | Required | Default | Description                                                                                                      |
+|:-------------|:----------|:---------|:--------|:-----------------------------------------------------------------------------------------------------------------|
+| `maxPlayers` | `integer` | No       | `8`     | Maximum players allowed. Capped by subscription tier (free: 8, pro: unlimited).                                  |
+| `testGameId` | `UUID`    | No       | `null`  | If provided, creates a test session that loads draft code from this game. The game must belong to the host user. |
 
 **Response:** `201 Created`
 
@@ -1562,7 +1596,7 @@ POST /api/v1/sessions
   "createdAt": "2026-02-07T19:00:00Z",
   "updatedAt": "2026-02-07T19:00:00Z",
   "endedAt": null,
-  "hostId": "uuid-or-null",
+  "hostId": "uuid",
   "gameId": null,
   "gameVersionId": null,
   "sessionCode": "XKCD42",
@@ -1570,6 +1604,8 @@ POST /api/v1/sessions
   "maxPlayers": 8
 }
 ```
+
+If `testGameId` is provided, the session is created with `gameId` set and the response includes the draft game code. The session transitions directly to `playing` status. Test sessions do not create `PlayHistory` records and do not update game play counters.
 
 The `sessionCode` consists of 4–6 uppercase alphanumeric characters, excluding visually ambiguous characters (0/O, 1/I/L). Codes are unique among active (non-ended) sessions.
 
@@ -1599,7 +1635,7 @@ GET /api/v1/sessions/{sessionCode}
   "createdAt": "2026-02-07T19:00:00Z",
   "updatedAt": "2026-02-07T19:45:00Z",
   "endedAt": null,
-  "hostId": "uuid-or-null",
+  "hostId": "uuid",
   "sessionCode": "XKCD42",
   "status": "playing",
   "maxPlayers": 8,
@@ -1717,18 +1753,19 @@ Steps performed:
 
 1. Validates the game is `published` and has a `publishedVersionId`.
 2. Sets `Session.gameId` and `Session.gameVersionId`.
-3. Sends `gameScreenCode` to the host (big screen) and `controllerScreenCode` to all connected players via WebSocket.
-4. Transitions `Session.status` to `"playing"`.
-5. Creates `PlayHistory` records for each connected player.
+3. Transitions `Session.status` to `"playing"`.
+4. Creates `PlayHistory` records for each connected player.
+5. Delivers game code via **two channels**: the REST response returns `gameScreenCode` to the host who made the request, and a `game_loaded` WebSocket message delivers `controllerScreenCode` to all connected players. The host also receives the `game_loaded` message with `gameScreenCode` via WebSocket for consistency.
 
 **Errors:**
 
-| Code  | Condition                                          |
-|:------|:---------------------------------------------------|
-| `403` | User is not the host.                              |
-| `404` | Session not found, or game not found.              |
-| `422` | Game is not published or has no published version. |
-| `422` | Session is not in `lobby` status.                  |
+| Code  | Condition                                                                            |
+|:------|:-------------------------------------------------------------------------------------|
+| `403` | User is not the host.                                                                |
+| `404` | Session not found, or game not found.                                                |
+| `422` | Game is not published or has no published version.                                   |
+| `422` | Session is not in `lobby` status.                                                    |
+| `422` | Current player count exceeds the game's `maxPlayers`. Remove players before loading. |
 
 ---
 
@@ -2029,10 +2066,11 @@ Triggers recalculation of `Game.avgRating` and `Game.reviewCount`.
 
 **Errors:**
 
-| Code  | Condition                      |
-|:------|:-------------------------------|
-| `400` | Rating is not between 1 and 5. |
-| `404` | Game not found.                |
+| Code  | Condition                                      |
+|:------|:-----------------------------------------------|
+| `400` | Rating is not between 1 and 5.                 |
+| `403` | User is the creator of the game (self-review). |
+| `404` | Game not found.                                |
 
 ---
 
@@ -3098,7 +3136,7 @@ WS /api/v1/sessions/{sessionId}/ws
 1. Client opens a WebSocket connection with the query parameters above.
 2. Server validates the session exists and is not ended.
 3. For `player` role: validates the `playerId` exists in the session and sets `connectionStatus` to `"connected"`.
-4. For `host` role: validates the requester is the session host (or the session allows anonymous hosting).
+4. For `host` role: validates the requester is the session host (via `token`).
 5. On success, the server sends a `connected` message.
 6. On failure, the server closes the connection with an appropriate close code.
 
