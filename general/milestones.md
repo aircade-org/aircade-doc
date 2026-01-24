@@ -10,19 +10,19 @@
 
 **Goal:** Establish the development infrastructure, CI/CD pipeline, and a deployable skeleton for both the API and web application.
 
-- [ ] **[Shared]** Define environment variable schema (database URL, JWT secret, JWT expiration durations, OAuth credentials) and document in a shared `.env.example`.
-- [ ] **[Shared]** Configure Railway.com project with separate services for PostgreSQL, API server, and web frontend.
-- [ ] **[Database]** Provision PostgreSQL instance on Railway and verify connectivity from the API server.
-- [ ] **[Backend]** Initialize Rust project with Axum 0.8, Tokio, and project dependency manifest (see technical stack).
-- [ ] **[Backend]** Configure Tower middleware stack: CORS, request tracing (`tracing` + `tracing-subscriber`), and JSON error responses.
-- [ ] **[Backend]** Set up SeaORM with `sea-orm-migration` and create an empty initial migration.
-- [ ] **[Backend]** Implement `GET /api/v1/health` endpoint returning server status, version, and database connectivity check.
+- [X] **[Shared]** Define environment variable schema (database URL, JWT secret, JWT expiration durations, OAuth credentials) and document in a shared `.env.example`.
+- [X] **[Shared]** Configure Railway.com project with separate services for PostgreSQL, API server, and web frontend.
+- [X] **[Database]** Provision PostgreSQL instance on Railway and verify connectivity from the API server.
+- [X] **[Backend]** Initialize Rust project with Axum 0.8, Tokio, and project dependency manifest (see technical stack).
+- [X] **[Backend]** Configure Tower middleware stack: CORS, request tracing (`tracing` + `tracing-subscriber`), and JSON error responses.
+- [X] **[Backend]** Set up SeaORM with `sea-orm-migration` and create an empty initial migration.
+- [X] **[Backend]** Implement `GET /api/v1/health` endpoint returning server status, version, and database connectivity check.
 - [ ] **[Frontend]** Initialize Next.js 16 project with TypeScript, Tailwind CSS, shadcn/ui, and Zustand.
 - [ ] **[Frontend]** Set up Axios HTTP client with base URL configuration and interceptor for Bearer token injection.
 - [ ] **[Frontend]** Create application shell with layout, navigation placeholder, and routing structure for Studio, Console, and Controller experiences.
-- [ ] **[Test]** Set up backend integration test harness with a test database and request helpers.
+- [X] **[Test]** Set up backend integration test harness with a test database and request helpers.
 - [ ] **[Test]** Set up frontend component test framework.
-- [ ] **[Shared]** Configure CI/CD pipeline: automated build, test, and deploy on push to main branch.
+- [X] **[Shared]** Configure CI/CD pipeline: automated build, test, and deploy on push to main branch.
 
 ---
 
