@@ -17,11 +17,11 @@
 - [X] **[Backend]** Configure Tower middleware stack: CORS, request tracing (`tracing` + `tracing-subscriber`), and JSON error responses.
 - [X] **[Backend]** Set up SeaORM with `sea-orm-migration` and create an empty initial migration.
 - [X] **[Backend]** Implement `GET /api/v1/health` endpoint returning server status, version, and database connectivity check.
-- [ ] **[Frontend]** Initialize Next.js 16 project with TypeScript, Tailwind CSS, shadcn/ui, and Zustand.
-- [ ] **[Frontend]** Set up Axios HTTP client with base URL configuration and interceptor for Bearer token injection.
-- [ ] **[Frontend]** Create application shell with layout, navigation placeholder, and routing structure for Studio, Console, and Controller experiences.
+- [X] **[Frontend]** Initialize Next.js 16 project with TypeScript, Tailwind CSS, shadcn/ui, and Zustand.
+- [X] **[Frontend]** Set up Axios HTTP client with base URL configuration and interceptor for Bearer token injection.
+- [X] **[Frontend]** Create application shell with layout, navigation placeholder, and routing structure for Studio, Console, and Controller experiences.
 - [X] **[Test]** Set up backend integration test harness with a test database and request helpers.
-- [ ] **[Test]** Set up frontend component test framework.
+- [X] **[Test]** Set up frontend component test framework.
 - [X] **[Shared]** Configure CI/CD pipeline: automated build, test, and deploy on push to main branch.
 
 ---
