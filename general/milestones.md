@@ -30,22 +30,22 @@
 
 **Goal:** Implement the full authentication system so users can sign up, sign in, verify their email, reset passwords, and authenticate via Google and GitHub OAuth.
 
-- [ ] **[Database]** Create `User` table migration with all fields: id, email, username, displayName, avatarUrl, bio, emailVerified, role, subscriptionPlan, subscriptionExpiresAt, accountStatus, lastLoginAt, lastLoginIp, createdAt, updatedAt, deletedAt.
-- [ ] **[Database]** Create `AuthProvider` table migration with all fields: id, userId (FK -> User), provider, providerId, passwordHash, providerEmail, verificationToken, tokenExpiresAt, createdAt. Add unique constraints on (userId, provider) and on providerId.
-- [ ] **[Backend]** Implement SeaORM entity models for `User` and `AuthProvider`.
-- [ ] **[Backend]** Implement JWT token generation (access + refresh tokens) and validation middleware that extracts the authenticated user and enforces role-based authorization (Guest, User, Moderator, Admin).
-- [ ] **[Backend]** Implement `POST /api/v1/auth/signup/email` - create User + AuthProvider (email), hash password, send verification email, return tokens.
-- [ ] **[Backend]** Implement `POST /api/v1/auth/signin/email` - verify credentials, update lastLoginAt/lastLoginIp, return tokens.
-- [ ] **[Backend]** Implement `POST /api/v1/auth/verify-email` - validate token, set emailVerified to true.
-- [ ] **[Backend]** Implement `POST /api/v1/auth/resend-verification` - generate new token, resend email.
-- [ ] **[Backend]** Implement `POST /api/v1/auth/password-reset/request` and `POST /api/v1/auth/password-reset/confirm` - token-based password reset flow.
-- [ ] **[Backend]** Implement `POST /api/v1/auth/password/change` - change password for authenticated user.
-- [ ] **[Backend]** Implement `GET /api/v1/auth/oauth/google` (initiate) and `GET /api/v1/auth/oauth/google/callback` - Google OAuth 2.0 flow with auto-account creation.
-- [ ] **[Backend]** Implement `GET /api/v1/auth/oauth/github` (initiate) and `GET /api/v1/auth/oauth/github/callback` - GitHub OAuth 2.0 flow with auto-account creation.
-- [ ] **[Backend]** Implement `POST /api/v1/auth/link/{provider}` and `DELETE /api/v1/auth/link/{provider}` - link/unlink additional auth providers to an existing account.
-- [ ] **[Backend]** Implement `POST /api/v1/auth/refresh` - refresh access token using refresh token.
-- [ ] **[Backend]** Implement `POST /api/v1/auth/signout` - invalidate tokens.
-- [ ] **[Backend]** Enforce account status checks in auth middleware: reject suspended/deactivated accounts with 403.
+- [X] **[Database]** Create `User` table migration with all fields: id, email, username, displayName, avatarUrl, bio, emailVerified, role, subscriptionPlan, subscriptionExpiresAt, accountStatus, lastLoginAt, lastLoginIp, createdAt, updatedAt, deletedAt.
+- [X] **[Database]** Create `AuthProvider` table migration with all fields: id, userId (FK -> User), provider, providerId, passwordHash, providerEmail, verificationToken, tokenExpiresAt, createdAt. Add unique constraints on (userId, provider) and on providerId.
+- [X] **[Backend]** Implement SeaORM entity models for `User` and `AuthProvider`.
+- [X] **[Backend]** Implement JWT token generation (access + refresh tokens) and validation middleware that extracts the authenticated user and enforces role-based authorization (Guest, User, Moderator, Admin).
+- [X] **[Backend]** Implement `POST /api/v1/auth/signup/email` - create User + AuthProvider (email), hash password, send verification email, return tokens.
+- [X] **[Backend]** Implement `POST /api/v1/auth/signin/email` - verify credentials, update lastLoginAt/lastLoginIp, return tokens.
+- [X] **[Backend]** Implement `POST /api/v1/auth/verify-email` - validate token, set emailVerified to true.
+- [X] **[Backend]** Implement `POST /api/v1/auth/resend-verification` - generate new token, resend email.
+- [X] **[Backend]** Implement `POST /api/v1/auth/password-reset/request` and `POST /api/v1/auth/password-reset/confirm` - token-based password reset flow.
+- [X] **[Backend]** Implement `POST /api/v1/auth/password/change` - change password for authenticated user.
+- [X] **[Backend]** Implement `GET /api/v1/auth/oauth/google` (initiate) and `GET /api/v1/auth/oauth/google/callback` - Google OAuth 2.0 flow with auto-account creation.
+- [X] **[Backend]** Implement `GET /api/v1/auth/oauth/github` (initiate) and `GET /api/v1/auth/oauth/github/callback` - GitHub OAuth 2.0 flow with auto-account creation.
+- [X] **[Backend]** Implement `POST /api/v1/auth/link/{provider}` and `DELETE /api/v1/auth/link/{provider}` - link/unlink additional auth providers to an existing account.
+- [X] **[Backend]** Implement `POST /api/v1/auth/refresh` - refresh access token using refresh token.
+- [X] **[Backend]** Implement `POST /api/v1/auth/signout` - invalidate tokens.
+- [X] **[Backend]** Enforce account status checks in auth middleware: reject suspended/deactivated accounts with 403.
 - [ ] **[Frontend]** Build sign-up page with email/password form and validation (Zod schemas).
 - [ ] **[Frontend]** Build sign-in page with email/password form, Google OAuth button, and GitHub OAuth button.
 - [ ] **[Frontend]** Implement OAuth callback handler pages for Google and GitHub redirects.
@@ -53,8 +53,8 @@
 - [ ] **[Frontend]** Build email verification landing page and resend verification UI.
 - [ ] **[Frontend]** Build password reset request page and password reset confirmation page.
 - [ ] **[Frontend]** Add auth-protected route wrapper that redirects unauthenticated users to sign-in.
-- [ ] **[Test]** Write backend tests for all auth endpoints: sign-up, sign-in, OAuth flows, email verification, password reset, token refresh, sign-out.
-- [ ] **[Test]** Write backend tests for auth middleware: role enforcement, account status blocking.
+- [X] **[Test]** Write backend tests for all auth endpoints: sign-up, sign-in, OAuth flows, email verification, password reset, token refresh, sign-out.
+- [X] **[Test]** Write backend tests for auth middleware: role enforcement, account status blocking.
 
 ---
 
