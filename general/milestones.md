@@ -46,13 +46,13 @@
 - [X] **[Backend]** Implement `POST /api/v1/auth/refresh` - refresh access token using refresh token.
 - [X] **[Backend]** Implement `POST /api/v1/auth/signout` - invalidate tokens.
 - [X] **[Backend]** Enforce account status checks in auth middleware: reject suspended/deactivated accounts with 403.
-- [ ] **[Frontend]** Build sign-up page with email/password form and validation (Zod schemas).
-- [ ] **[Frontend]** Build sign-in page with email/password form, Google OAuth button, and GitHub OAuth button.
-- [ ] **[Frontend]** Implement OAuth callback handler pages for Google and GitHub redirects.
-- [ ] **[Frontend]** Create Zustand auth store: token storage, user state, auto-refresh logic, and sign-out.
-- [ ] **[Frontend]** Build email verification landing page and resend verification UI.
-- [ ] **[Frontend]** Build password reset request page and password reset confirmation page.
-- [ ] **[Frontend]** Add auth-protected route wrapper that redirects unauthenticated users to sign-in.
+- [X] **[Frontend]** Build sign-up page with email/password form and validation (Zod schemas).
+- [X] **[Frontend]** Build sign-in page with email/password form, Google OAuth button, and GitHub OAuth button.
+- [X] **[Frontend]** Implement OAuth callback handler pages for Google and GitHub redirects.
+- [X] **[Frontend]** Create Zustand auth store: token storage, user state, auto-refresh logic, and sign-out.
+- [X] **[Frontend]** Build email verification landing page and resend verification UI.
+- [X] **[Frontend]** Build password reset request page and password reset confirmation page.
+- [X] **[Frontend]** Add auth-protected route wrapper that redirects unauthenticated users to sign-in.
 - [X] **[Test]** Write backend tests for all auth endpoints: sign-up, sign-in, OAuth flows, email verification, password reset, token refresh, sign-out.
 - [X] **[Test]** Write backend tests for auth middleware: role enforcement, account status blocking.
 
