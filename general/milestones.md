@@ -62,20 +62,20 @@
 
 **Goal:** Allow users to view and edit their profile, upload avatars, manage their email, and view public creator profiles.
 
-- [ ] **[Backend]** Implement `GET /api/v1/users/me` - return the authenticated user's full profile.
-- [ ] **[Backend]** Implement `PATCH /api/v1/users/me` - update displayName, bio, avatarUrl.
-- [ ] **[Backend]** Implement `POST /api/v1/users/me/avatar` - upload avatar image (multipart/form-data), store file, update avatarUrl.
-- [ ] **[Backend]** Implement `DELETE /api/v1/users/me/avatar` - remove avatar, reset to default.
-- [ ] **[Backend]** Implement `PATCH /api/v1/users/me/username` - change username with uniqueness validation.
-- [ ] **[Backend]** Implement `PATCH /api/v1/users/me/email` - change email address, reset emailVerified, send new verification email. Requires current password (or account confirmation for OAuth-only users).
-- [ ] **[Backend]** Implement `DELETE /api/v1/users/me` - soft-deactivate the account (set accountStatus to deactivated, hide profile and games). Requires current password (or account confirmation for OAuth-only users).
-- [ ] **[Backend]** Implement `GET /api/v1/users/:username` - return public profile with published games, aggregate stats (total games, total play count).
+- [X] **[Backend]** Implement `GET /api/v1/users/me` - return the authenticated user's full profile.
+- [X] **[Backend]** Implement `PATCH /api/v1/users/me` - update displayName, bio, avatarUrl.
+- [X] **[Backend]** Implement `POST /api/v1/users/me/avatar` - upload avatar image (multipart/form-data), store file, update avatarUrl.
+- [X] **[Backend]** Implement `DELETE /api/v1/users/me/avatar` - remove avatar, reset to default.
+- [X] **[Backend]** Implement `PATCH /api/v1/users/me/username` - change username with uniqueness validation.
+- [X] **[Backend]** Implement `PATCH /api/v1/users/me/email` - change email address, reset emailVerified, send new verification email. Requires current password (or account confirmation for OAuth-only users).
+- [X] **[Backend]** Implement `DELETE /api/v1/users/me` - soft-deactivate the account (set accountStatus to deactivated, hide profile and games). Requires current password (or account confirmation for OAuth-only users).
+- [X] **[Backend]** Implement `GET /api/v1/users/:username` - return public profile with published games, aggregate stats (total games, total play count).
 - [ ] **[Frontend]** Build user settings page with profile edit form (displayName, bio) and separate username change form.
 - [ ] **[Frontend]** Build avatar upload component with preview and delete functionality.
 - [ ] **[Frontend]** Build email change flow with re-verification notice.
 - [ ] **[Frontend]** Build account deactivation confirmation dialog.
 - [ ] **[Frontend]** Build public user profile page showing creator info, published games list, and aggregate statistics.
-- [ ] **[Test]** Write backend tests for all user endpoints: profile CRUD, avatar upload/delete, email change, deactivation, public profile.
+- [X] **[Test]** Write backend tests for all user endpoints: profile CRUD, avatar upload/delete, email change, deactivation, public profile.
 
 ---
 
