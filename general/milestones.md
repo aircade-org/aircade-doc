@@ -79,6 +79,84 @@
 
 ---
 
+### MS0.3.0s: Pong PoC - Console-to-Controller Synchronization
+
+**Goal:** Demonstrate the core AirCade experience end-to-end: a user opens the web app, selects a hardcoded Pong game from a game list, generates a QR code, connects a phone as a controller, and plays single-player Pong with the paddle controlled from the phone via WebSocket.
+
+**Scope:** This is a vertical slice / Proof of Concept. No multiplayer, no Creative Studio, no game publishing flow. The Pong game (p5.js) is hardcoded in the frontend. Authentication is required only for session hosting (already implemented). The controller join flow supports anonymous guests.
+
+> **Approach:** Each task below is either a **new PoC-specific task** or a **reference to an existing milestone task** (marked with `→ from M0.x.0`). Referenced tasks should be implemented in their simplest form sufficient for the PoC — full production behavior will be completed in their original milestone.
+
+#### Phase A: Database — Session & Player tables
+
+These are prerequisites for the entire session system. Implement them exactly as specified in M0.6.0.
+
+- [ ] **[Database]** Create `Game` table migration with all fields including gameScreenCode, controllerScreenCode, publishedVersionId, cached aggregates (playCount, totalPlayTime, avgRating, reviewCount), and forkedFromId self-reference. → *from M0.4.0*
+- [ ] **[Database]** Create `GameVersion` table migration with unique constraint on (gameId, versionNumber). → *from M0.4.0*
+- [ ] **[Database]** Create `Session` table migration with all fields: id, hostId, gameId, gameVersionId, sessionCode, status, maxPlayers, createdAt, updatedAt, endedAt. → *from M0.6.0*
+- [ ] **[Database]** Create `Player` table migration with all fields: id, sessionId, userId, displayName, avatarUrl, connectionStatus, leftAt, createdAt. → *from M0.6.0*
+
+#### Phase B: Backend — Game entity, Session CRUD & WebSocket relay
+
+Implement the backend session lifecycle and WebSocket communication. For the PoC, only the subset of endpoints needed for the Pong flow is required.
+
+- [ ] **[Backend]** Implement SeaORM entity models for `Game` and `GameVersion`. → *from M0.4.0*
+- [ ] **[Backend]** Implement SeaORM entity models for `Session` and `Player`. → *from M0.6.0*
+- [ ] **[Backend]** Implement session code generation: 4-6 uppercase alphanumeric characters excluding ambiguous characters (0/O, 1/I/L), unique among active sessions, case-insensitive lookup. → *from M0.6.0*
+- [ ] **[Backend]** Implement `POST /api/v1/sessions` — create a session in lobby status with generated session code. For the PoC, the `testGameId` parameter is not needed; sessions start in lobby. → *from M0.6.0*
+- [ ] **[Backend]** Implement `GET /api/v1/sessions/{sessionCode}` — return session details including player list and loaded game info. → *from M0.6.0*
+- [ ] **[Backend]** Implement `POST /api/v1/sessions/{sessionCode}/join` — join a session by session code. Validate session exists, is not ended, and has not reached maxPlayers. Create Player record. Support anonymous join (userId nullable). → *from M0.6.0*
+- [ ] **[Backend]** Implement `GET /api/v1/sessions/{sessionId}/players` — list all players in a session. → *from M0.6.0*
+- [ ] **[Backend]** Implement `DELETE /api/v1/sessions/{sessionId}` — set status to ended, set endedAt, close all WebSocket connections. Host only. → *from M0.6.0*
+- [ ] **[Backend]** Implement `POST /api/v1/sessions/{sessionId}/game` — load a game into the session (for the PoC, this will load the hardcoded Pong game seeded in the database). Validate game exists. Set gameId and gameVersionId. Transition status to `playing`. Deliver `game_loaded` WebSocket message with gameScreenCode to host and controllerScreenCode to players. → *simplified from M0.6.0*
+- [ ] **[Backend]** Implement WebSocket endpoint `WS /api/v1/sessions/{sessionId}/ws` — establish WebSocket connection for a client (host or player). Accepts `role`, `playerId`, and optional `token` as query parameters. → *from M0.6.0*
+- [ ] **[Backend]** Implement WebSocket message routing: relay `player_input` from controller to host as `player_input_event`, relay `game_state_update` from host to all players as `game_state`. Handle `connected`, `player_joined`, `player_left`, `game_loaded`, and `session_status_change` messages. → *from M0.6.0*
+- [ ] **[Backend]** Implement basic player connection lifecycle: track connectionStatus on connect/disconnect. Full reconnection grace period can be deferred. → *simplified from M0.6.0*
+
+#### Phase C: Backend — Seed Pong game data
+
+A one-time seed to have the Pong game available in the database for the PoC.
+
+- [ ] **[Backend]** Create a database seed (or migration) that inserts a `Game` record for "Pong" (status: `published`, visibility: `public`, technology: `p5js`, minPlayers: 1, maxPlayers: 1) with placeholder gameScreenCode and controllerScreenCode, and a corresponding `GameVersion` record. The actual p5.js code will be hardcoded in the frontend for the PoC, but the Game/GameVersion records must exist so the session load flow works correctly.
+
+#### Phase D: Frontend — Console experience (big screen)
+
+Build the big-screen experience: game list → session creation → QR code lobby → game rendering.
+
+- [ ] **[Frontend]** Build a simple game list page showing available games. For the PoC this shows the single hardcoded Pong game with title, description, and a "Play" button. This is a minimal precursor to the full library in M0.8.0.
+- [ ] **[Frontend]** Implement session creation flow: when the user clicks "Play" on a game, call `POST /api/v1/sessions` to create a session (user must be signed in). The session is created in `lobby` status.
+- [ ] **[Frontend]** Build lobby screen: display session code prominently, show QR code (encoding the join URL `{baseUrl}/join/{sessionCode}`), render connected player list with names in real time via WebSocket. → *from M0.6.0*
+- [ ] **[Frontend]** Create Zustand session store for managing session state, player list, and WebSocket connection. → *from M0.6.0*
+- [ ] **[Frontend]** Implement WebSocket client on the Console: connect as `role=host`, handle `player_joined`, `player_left`, `player_input_event`, `game_loaded`, and `session_status_change` messages. Update session store reactively. → *from M0.6.0*
+- [ ] **[Frontend]** Build the "controller connected" confirmation and "Start Game" button: once at least one player is connected, show a confirmation message and enable the "Start Game" button. Clicking it calls `POST /api/v1/sessions/{sessionId}/game` with the Pong game ID.
+- [ ] **[Frontend]** Build Game Screen renderer: when the game is loaded (status transitions to `playing`), render the Pong game using p5.js in a sandboxed iframe. The gameScreenCode is hardcoded in the frontend for the PoC. Wire the `AirCade.onPlayerInput()` callback to receive paddle movement from the controller via WebSocket.
+- [ ] **[Frontend]** Implement the Game Screen side of the AirCade runtime API (minimal PoC version): `AirCade.onPlayerInput(callback)` to receive controller input and `AirCade.broadcastState(state)` to send game state back to the controller. → *simplified from M0.5.0*
+
+#### Phase E: Frontend — Controller experience (phone)
+
+Build the smartphone controller: join via QR/code → lobby wait → Pong paddle controller.
+
+- [ ] **[Frontend]** Build the Controller join page: input field for session code and join button. The QR code scanned from the Console should navigate directly to this page with the session code pre-filled. → *from M0.7.0*
+- [ ] **[Frontend]** Build a minimal player setup: prompt for display name before joining. Call `POST /api/v1/sessions/{sessionCode}/join` with the display name. → *simplified from M0.7.0*
+- [ ] **[Frontend]** Build the Controller lobby view: show "Waiting for host to start the game..." status message. → *from M0.7.0*
+- [ ] **[Frontend]** Implement WebSocket client on the Controller: connect as `role=player` with the playerId received from the join response. Handle `game_loaded`, `game_state`, and `session_status_change` messages. → *from M0.7.0*
+- [ ] **[Frontend]** Build the Controller game view for Pong: render a touch-based paddle controller using p5.js. Capture touch/drag events for vertical paddle movement. Send input via `AirCade.sendInput("paddle_move", { y: ... })` through WebSocket. → *from M0.7.0*
+- [ ] **[Frontend]** Implement the Controller Screen side of the AirCade runtime API (minimal PoC version): `AirCade.sendInput(inputType, data)` to send input to the Game Screen and `AirCade.onStateUpdate(callback)` to receive game state for visual feedback. → *simplified from M0.5.0*
+- [ ] **[Frontend]** Optimize the controller for mobile: viewport meta tags, prevent zoom/scroll, full-screen-friendly sizing. → *from M0.7.0*
+
+#### Phase F: Hardcoded Pong game code (p5.js)
+
+The actual game logic, temporarily hardcoded in the frontend.
+
+- [ ] **[Frontend]** Write the Pong Game Screen code (p5.js): single-player Pong with a ball bouncing off walls and a player-controlled paddle on one side, an AI paddle on the other. Use `AirCade.onPlayerInput()` to receive paddle position from the controller. Use `AirCade.broadcastState()` to send ball position and score to the controller for optional visual feedback.
+- [ ] **[Frontend]** Write the Pong Controller Screen code (p5.js): a simple vertical slider/touch area representing the paddle. Capture touch Y-position and send it via `AirCade.sendInput("paddle_move", { y })`. Optionally display the current score received from `AirCade.onStateUpdate()`.
+
+#### Phase G: Integration test
+
+- [ ] **[Test]** Manual end-to-end test of the full PoC flow: sign in → see Pong in game list → click Play → session created with QR code → scan QR from phone → enter name and join → Console shows "controller connected" → click Start Game → Pong renders on Console → paddle moves from phone → ball responds → game is playable.
+
+---
+
 ## Phase 2: Core Platform
 
 ### M0.4.0: Game Management
