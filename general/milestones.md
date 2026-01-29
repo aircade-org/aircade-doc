@@ -91,33 +91,33 @@
 
 These are prerequisites for the entire session system. Implement them exactly as specified in M0.6.0.
 
-- [ ] **[Database]** Create `Game` table migration with all fields including gameScreenCode, controllerScreenCode, publishedVersionId, cached aggregates (playCount, totalPlayTime, avgRating, reviewCount), and forkedFromId self-reference. → *from M0.4.0*
-- [ ] **[Database]** Create `GameVersion` table migration with unique constraint on (gameId, versionNumber). → *from M0.4.0*
-- [ ] **[Database]** Create `Session` table migration with all fields: id, hostId, gameId, gameVersionId, sessionCode, status, maxPlayers, createdAt, updatedAt, endedAt. → *from M0.6.0*
-- [ ] **[Database]** Create `Player` table migration with all fields: id, sessionId, userId, displayName, avatarUrl, connectionStatus, leftAt, createdAt. → *from M0.6.0*
+- [X] **[Database]** Create `Game` table migration with all fields including gameScreenCode, controllerScreenCode, publishedVersionId, cached aggregates (playCount, totalPlayTime, avgRating, reviewCount), and forkedFromId self-reference. → *from M0.4.0*
+- [X] **[Database]** Create `GameVersion` table migration with unique constraint on (gameId, versionNumber). → *from M0.4.0*
+- [X] **[Database]** Create `Session` table migration with all fields: id, hostId, gameId, gameVersionId, sessionCode, status, maxPlayers, createdAt, updatedAt, endedAt. → *from M0.6.0*
+- [X] **[Database]** Create `Player` table migration with all fields: id, sessionId, userId, displayName, avatarUrl, connectionStatus, leftAt, createdAt. → *from M0.6.0*
 
 #### Phase B: Backend — Game entity, Session CRUD & WebSocket relay
 
 Implement the backend session lifecycle and WebSocket communication. For the PoC, only the subset of endpoints needed for the Pong flow is required.
 
-- [ ] **[Backend]** Implement SeaORM entity models for `Game` and `GameVersion`. → *from M0.4.0*
-- [ ] **[Backend]** Implement SeaORM entity models for `Session` and `Player`. → *from M0.6.0*
-- [ ] **[Backend]** Implement session code generation: 4-6 uppercase alphanumeric characters excluding ambiguous characters (0/O, 1/I/L), unique among active sessions, case-insensitive lookup. → *from M0.6.0*
-- [ ] **[Backend]** Implement `POST /api/v1/sessions` — create a session in lobby status with generated session code. For the PoC, the `testGameId` parameter is not needed; sessions start in lobby. → *from M0.6.0*
-- [ ] **[Backend]** Implement `GET /api/v1/sessions/{sessionCode}` — return session details including player list and loaded game info. → *from M0.6.0*
-- [ ] **[Backend]** Implement `POST /api/v1/sessions/{sessionCode}/join` — join a session by session code. Validate session exists, is not ended, and has not reached maxPlayers. Create Player record. Support anonymous join (userId nullable). → *from M0.6.0*
-- [ ] **[Backend]** Implement `GET /api/v1/sessions/{sessionId}/players` — list all players in a session. → *from M0.6.0*
-- [ ] **[Backend]** Implement `DELETE /api/v1/sessions/{sessionId}` — set status to ended, set endedAt, close all WebSocket connections. Host only. → *from M0.6.0*
-- [ ] **[Backend]** Implement `POST /api/v1/sessions/{sessionId}/game` — load a game into the session (for the PoC, this will load the hardcoded Pong game seeded in the database). Validate game exists. Set gameId and gameVersionId. Transition status to `playing`. Deliver `game_loaded` WebSocket message with gameScreenCode to host and controllerScreenCode to players. → *simplified from M0.6.0*
-- [ ] **[Backend]** Implement WebSocket endpoint `WS /api/v1/sessions/{sessionId}/ws` — establish WebSocket connection for a client (host or player). Accepts `role`, `playerId`, and optional `token` as query parameters. → *from M0.6.0*
-- [ ] **[Backend]** Implement WebSocket message routing: relay `player_input` from controller to host as `player_input_event`, relay `game_state_update` from host to all players as `game_state`. Handle `connected`, `player_joined`, `player_left`, `game_loaded`, and `session_status_change` messages. → *from M0.6.0*
-- [ ] **[Backend]** Implement basic player connection lifecycle: track connectionStatus on connect/disconnect. Full reconnection grace period can be deferred. → *simplified from M0.6.0*
+- [X] **[Backend]** Implement SeaORM entity models for `Game` and `GameVersion`. → *from M0.4.0*
+- [X] **[Backend]** Implement SeaORM entity models for `Session` and `Player`. → *from M0.6.0*
+- [X] **[Backend]** Implement session code generation: 4-6 uppercase alphanumeric characters excluding ambiguous characters (0/O, 1/I/L), unique among active sessions, case-insensitive lookup. → *from M0.6.0*
+- [X] **[Backend]** Implement `POST /api/v1/sessions` — create a session in lobby status with generated session code. For the PoC, the `testGameId` parameter is not needed; sessions start in lobby. → *from M0.6.0*
+- [X] **[Backend]** Implement `GET /api/v1/sessions/{sessionCode}` — return session details including player list and loaded game info. → *from M0.6.0*
+- [X] **[Backend]** Implement `POST /api/v1/sessions/{sessionCode}/join` — join a session by session code. Validate session exists, is not ended, and has not reached maxPlayers. Create Player record. Support anonymous join (userId nullable). → *from M0.6.0*
+- [X] **[Backend]** Implement `GET /api/v1/sessions/{sessionId}/players` — list all players in a session. → *from M0.6.0*
+- [X] **[Backend]** Implement `DELETE /api/v1/sessions/{sessionId}` — set status to ended, set endedAt, close all WebSocket connections. Host only. → *from M0.6.0*
+- [X] **[Backend]** Implement `POST /api/v1/sessions/{sessionId}/game` — load a game into the session (for the PoC, this will load the hardcoded Pong game seeded in the database). Validate game exists. Set gameId and gameVersionId. Transition status to `playing`. Deliver `game_loaded` WebSocket message with gameScreenCode to host and controllerScreenCode to players. → *simplified from M0.6.0*
+- [X] **[Backend]** Implement WebSocket endpoint `WS /api/v1/sessions/{sessionId}/ws` — establish WebSocket connection for a client (host or player). Accepts `role`, `playerId`, and optional `token` as query parameters. → *from M0.6.0*
+- [X] **[Backend]** Implement WebSocket message routing: relay `player_input` from controller to host as `player_input_event`, relay `game_state_update` from host to all players as `game_state`. Handle `connected`, `player_joined`, `player_left`, `game_loaded`, and `session_status_change` messages. → *from M0.6.0*
+- [X] **[Backend]** Implement basic player connection lifecycle: track connectionStatus on connect/disconnect. Full reconnection grace period can be deferred. → *simplified from M0.6.0*
 
 #### Phase C: Backend — Seed Pong game data
 
 A one-time seed to have the Pong game available in the database for the PoC.
 
-- [ ] **[Backend]** Create a database seed (or migration) that inserts a `Game` record for "Pong" (status: `published`, visibility: `public`, technology: `p5js`, minPlayers: 1, maxPlayers: 1) with placeholder gameScreenCode and controllerScreenCode, and a corresponding `GameVersion` record. The actual p5.js code will be hardcoded in the frontend for the PoC, but the Game/GameVersion records must exist so the session load flow works correctly.
+- [X] **[Backend]** Create a database seed (or migration) that inserts a `Game` record for "Pong" (status: `published`, visibility: `public`, technology: `p5js`, minPlayers: 1, maxPlayers: 1) with placeholder gameScreenCode and controllerScreenCode, and a corresponding `GameVersion` record. The actual p5.js code will be hardcoded in the frontend for the PoC, but the Game/GameVersion records must exist so the session load flow works correctly.
 
 #### Phase D: Frontend — Console experience (big screen)
 
