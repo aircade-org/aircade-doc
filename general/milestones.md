@@ -123,33 +123,33 @@ A one-time seed to have the Pong game available in the database for the PoC.
 
 Build the big-screen experience: game list → session creation → QR code lobby → game rendering.
 
-- [ ] **[Frontend]** Build a simple game list page showing available games. For the PoC this shows the single hardcoded Pong game with title, description, and a "Play" button. This is a minimal precursor to the full library in M0.8.0.
-- [ ] **[Frontend]** Implement session creation flow: when the user clicks "Play" on a game, call `POST /api/v1/sessions` to create a session (user must be signed in). The session is created in `lobby` status.
-- [ ] **[Frontend]** Build lobby screen: display session code prominently, show QR code (encoding the join URL `{baseUrl}/join/{sessionCode}`), render connected player list with names in real time via WebSocket. → *from M0.6.0*
-- [ ] **[Frontend]** Create Zustand session store for managing session state, player list, and WebSocket connection. → *from M0.6.0*
-- [ ] **[Frontend]** Implement WebSocket client on the Console: connect as `role=host`, handle `player_joined`, `player_left`, `player_input_event`, `game_loaded`, and `session_status_change` messages. Update session store reactively. → *from M0.6.0*
-- [ ] **[Frontend]** Build the "controller connected" confirmation and "Start Game" button: once at least one player is connected, show a confirmation message and enable the "Start Game" button. Clicking it calls `POST /api/v1/sessions/{sessionId}/game` with the Pong game ID.
-- [ ] **[Frontend]** Build Game Screen renderer: when the game is loaded (status transitions to `playing`), render the Pong game using p5.js in a sandboxed iframe. The gameScreenCode is hardcoded in the frontend for the PoC. Wire the `AirCade.onPlayerInput()` callback to receive paddle movement from the controller via WebSocket.
-- [ ] **[Frontend]** Implement the Game Screen side of the AirCade runtime API (minimal PoC version): `AirCade.onPlayerInput(callback)` to receive controller input and `AirCade.broadcastState(state)` to send game state back to the controller. → *simplified from M0.5.0*
+- [X] **[Frontend]** Build a simple game list page showing available games. For the PoC this shows the single hardcoded Pong game with title, description, and a "Play" button. This is a minimal precursor to the full library in M0.8.0.
+- [X] **[Frontend]** Implement session creation flow: when the user clicks "Play" on a game, call `POST /api/v1/sessions` to create a session (user must be signed in). The session is created in `lobby` status.
+- [X] **[Frontend]** Build lobby screen: display session code prominently, show QR code (encoding the join URL `{baseUrl}/join/{sessionCode}`), render connected player list with names in real time via WebSocket. → *from M0.6.0*
+- [X] **[Frontend]** Create Zustand session store for managing session state, player list, and WebSocket connection. → *from M0.6.0*
+- [X] **[Frontend]** Implement WebSocket client on the Console: connect as `role=host`, handle `player_joined`, `player_left`, `player_input_event`, `game_loaded`, and `session_status_change` messages. Update session store reactively. → *from M0.6.0*
+- [X] **[Frontend]** Build the "controller connected" confirmation and "Start Game" button: once at least one player is connected, show a confirmation message and enable the "Start Game" button. Clicking it calls `POST /api/v1/sessions/{sessionId}/game` with the Pong game ID.
+- [X] **[Frontend]** Build Game Screen renderer: when the game is loaded (status transitions to `playing`), render the Pong game using p5.js in a sandboxed iframe. The gameScreenCode is hardcoded in the frontend for the PoC. Wire the `AirCade.onPlayerInput()` callback to receive paddle movement from the controller via WebSocket.
+- [X] **[Frontend]** Implement the Game Screen side of the AirCade runtime API (minimal PoC version): `AirCade.onPlayerInput(callback)` to receive controller input and `AirCade.broadcastState(state)` to send game state back to the controller. → *simplified from M0.5.0*
 
 #### Phase E: Frontend — Controller experience (phone)
 
 Build the smartphone controller: join via QR/code → lobby wait → Pong paddle controller.
 
-- [ ] **[Frontend]** Build the Controller join page: input field for session code and join button. The QR code scanned from the Console should navigate directly to this page with the session code pre-filled. → *from M0.7.0*
-- [ ] **[Frontend]** Build a minimal player setup: prompt for display name before joining. Call `POST /api/v1/sessions/{sessionCode}/join` with the display name. → *simplified from M0.7.0*
-- [ ] **[Frontend]** Build the Controller lobby view: show "Waiting for host to start the game..." status message. → *from M0.7.0*
-- [ ] **[Frontend]** Implement WebSocket client on the Controller: connect as `role=player` with the playerId received from the join response. Handle `game_loaded`, `game_state`, and `session_status_change` messages. → *from M0.7.0*
-- [ ] **[Frontend]** Build the Controller game view for Pong: render a touch-based paddle controller using p5.js. Capture touch/drag events for vertical paddle movement. Send input via `AirCade.sendInput("paddle_move", { y: ... })` through WebSocket. → *from M0.7.0*
-- [ ] **[Frontend]** Implement the Controller Screen side of the AirCade runtime API (minimal PoC version): `AirCade.sendInput(inputType, data)` to send input to the Game Screen and `AirCade.onStateUpdate(callback)` to receive game state for visual feedback. → *simplified from M0.5.0*
-- [ ] **[Frontend]** Optimize the controller for mobile: viewport meta tags, prevent zoom/scroll, full-screen-friendly sizing. → *from M0.7.0*
+- [X] **[Frontend]** Build the Controller join page: input field for session code and join button. The QR code scanned from the Console should navigate directly to this page with the session code pre-filled. → *from M0.7.0*
+- [X] **[Frontend]** Build a minimal player setup: prompt for display name before joining. Call `POST /api/v1/sessions/{sessionCode}/join` with the display name. → *simplified from M0.7.0*
+- [X] **[Frontend]** Build the Controller lobby view: show "Waiting for host to start the game..." status message. → *from M0.7.0*
+- [X] **[Frontend]** Implement WebSocket client on the Controller: connect as `role=player` with the playerId received from the join response. Handle `game_loaded`, `game_state`, and `session_status_change` messages. → *from M0.7.0*
+- [X] **[Frontend]** Build the Controller game view for Pong: render a touch-based paddle controller using p5.js. Capture touch/drag events for vertical paddle movement. Send input via `AirCade.sendInput("paddle_move", { y: ... })` through WebSocket. → *from M0.7.0*
+- [X] **[Frontend]** Implement the Controller Screen side of the AirCade runtime API (minimal PoC version): `AirCade.sendInput(inputType, data)` to send input to the Game Screen and `AirCade.onStateUpdate(callback)` to receive game state for visual feedback. → *simplified from M0.5.0*
+- [X] **[Frontend]** Optimize the controller for mobile: viewport meta tags, prevent zoom/scroll, full-screen-friendly sizing. → *from M0.7.0*
 
 #### Phase F: Hardcoded Pong game code (p5.js)
 
 The actual game logic, temporarily hardcoded in the frontend.
 
-- [ ] **[Frontend]** Write the Pong Game Screen code (p5.js): single-player Pong with a ball bouncing off walls and a player-controlled paddle on one side, an AI paddle on the other. Use `AirCade.onPlayerInput()` to receive paddle position from the controller. Use `AirCade.broadcastState()` to send ball position and score to the controller for optional visual feedback.
-- [ ] **[Frontend]** Write the Pong Controller Screen code (p5.js): a simple vertical slider/touch area representing the paddle. Capture touch Y-position and send it via `AirCade.sendInput("paddle_move", { y })`. Optionally display the current score received from `AirCade.onStateUpdate()`.
+- [X] **[Frontend]** Write the Pong Game Screen code (p5.js): single-player Pong with a ball bouncing off walls and a player-controlled paddle on one side, an AI paddle on the other. Use `AirCade.onPlayerInput()` to receive paddle position from the controller. Use `AirCade.broadcastState()` to send ball position and score to the controller for optional visual feedback.
+- [X] **[Frontend]** Write the Pong Controller Screen code (p5.js): a simple vertical slider/touch area representing the paddle. Capture touch Y-position and send it via `AirCade.sendInput("paddle_move", { y })`. Optionally display the current score received from `AirCade.onStateUpdate()`.
 
 #### Phase G: Integration test
 
