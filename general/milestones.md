@@ -70,11 +70,11 @@
 - [X] **[Backend]** Implement `PATCH /api/v1/users/me/email` - change email address, reset emailVerified, send new verification email. Requires current password (or account confirmation for OAuth-only users).
 - [X] **[Backend]** Implement `DELETE /api/v1/users/me` - soft-deactivate the account (set accountStatus to deactivated, hide profile and games). Requires current password (or account confirmation for OAuth-only users).
 - [X] **[Backend]** Implement `GET /api/v1/users/:username` - return public profile with published games, aggregate stats (total games, total play count).
-- [ ] **[Frontend]** Build user settings page with profile edit form (displayName, bio) and separate username change form.
-- [ ] **[Frontend]** Build avatar upload component with preview and delete functionality.
-- [ ] **[Frontend]** Build email change flow with re-verification notice.
-- [ ] **[Frontend]** Build account deactivation confirmation dialog.
-- [ ] **[Frontend]** Build public user profile page showing creator info, published games list, and aggregate statistics.
+- [X] **[Frontend]** Build user settings page with profile edit form (displayName, bio) and separate username change form.
+- [X] **[Frontend]** Build avatar upload component with preview and delete functionality.
+- [X] **[Frontend]** Build email change flow with re-verification notice.
+- [X] **[Frontend]** Build account deactivation confirmation dialog.
+- [X] **[Frontend]** Build public user profile page showing creator info, published games list, and aggregate statistics.
 - [X] **[Test]** Write backend tests for all user endpoints: profile CRUD, avatar upload/delete, email change, deactivation, public profile.
 
 ---
