@@ -188,12 +188,12 @@ The actual game logic, temporarily hardcoded in the frontend.
 - [X] **[Backend]** Implement `GET /api/v1/games/:id/tags` - get the tags assigned to a game.
 - [X] **[Backend]** Implement `GET /api/v1/users/me/games` - list the authenticated user's own games (all statuses).
 - [X] **[Backend]** Implement `GET /api/v1/users/:username/games` - list a user's published, public games.
-- [ ] **[Frontend]** Build "My Games" dashboard listing the creator's games with status badges and quick actions.
-- [ ] **[Frontend]** Build game creation dialog/page with title, description, technology selection, and player count configuration.
-- [ ] **[Frontend]** Build game settings page for editing metadata, visibility, remixable toggle, and tags.
-- [ ] **[Frontend]** Build publish flow with confirmation dialog showing version changelog input.
-- [ ] **[Frontend]** Build game asset manager: upload, list, preview, and delete assets.
-- [ ] **[Frontend]** Build version history page showing all published versions with changelogs.
+- [X] **[Frontend]** Build "My Games" dashboard listing the creator's games with status badges and quick actions.
+- [X] **[Frontend]** Build game creation dialog/page with title, description, technology selection, and player count configuration.
+- [X] **[Frontend]** Build game settings page for editing metadata, visibility, remixable toggle, and tags.
+- [X] **[Frontend]** Build publish flow with confirmation dialog showing version changelog input.
+- [X] **[Frontend]** Build game asset manager: upload, list, preview, and delete assets.
+- [X] **[Frontend]** Build version history page showing all published versions with changelogs.
 - [X] **[Test]** Write backend tests for game CRUD, publish flow (validation, version creation), archive/unarchive, forking, asset management, and tag operations.
 
 ---
