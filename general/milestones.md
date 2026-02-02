@@ -153,7 +153,7 @@ The actual game logic, temporarily hardcoded in the frontend.
 
 #### Phase G: Integration test
 
-- [ ] **[Test]** Manual end-to-end test of the full PoC flow: sign in → see Pong in game list → click Play → session created with QR code → scan QR from phone → enter name and join → Console shows "controller connected" → click Start Game → Pong renders on Console → paddle moves from phone → ball responds → game is playable.
+- [X] **[Test]** Manual end-to-end test of the full PoC flow: sign in → see Pong in game list → click Play → session created with QR code → scan QR from phone → enter name and join → Console shows "controller connected" → click Start Game → Pong renders on Console → paddle moves from phone → ball responds → game is playable.
 
 ---
 
@@ -163,38 +163,38 @@ The actual game logic, temporarily hardcoded in the frontend.
 
 **Goal:** Enable creators to create game projects, write code for both canvases, manage assets and tags, publish versions, and handle the full game lifecycle (draft/published/archived).
 
-- [ ] **[Database]** Create `Game` table migration with all fields including gameScreenCode, controllerScreenCode, publishedVersionId, cached aggregates (playCount, totalPlayTime, avgRating, reviewCount), and forkedFromId self-reference.
-- [ ] **[Database]** Create `GameVersion` table migration with unique constraint on (gameId, versionNumber).
-- [ ] **[Database]** Create `GameAsset` table migration.
-- [ ] **[Database]** Create `Tag` table migration with unique constraints on name and slug.
-- [ ] **[Database]** Create `GameTag` join table migration with composite primary key (gameId, tagId).
-- [ ] **[Database]** Seed initial `Tag` records for all three categories: genre (Racing, Trivia, Drawing, Strategy, etc.), mood (Competitive, Cooperative, Relaxed, Chaotic, etc.), and playerStyle (Free-for-all, Teams, Turn-based, Real-time, etc.).
-- [ ] **[Backend]** Implement SeaORM entity models for `Game`, `GameVersion`, `GameAsset`, `Tag`, and `GameTag`.
-- [ ] **[Backend]** Implement `POST /api/v1/games` - create a new game in draft/private status with the authenticated user as creator.
-- [ ] **[Backend]** Implement `GET /api/v1/games/:id` - return game details (respecting visibility and ownership rules).
-- [ ] **[Backend]** Implement `PATCH /api/v1/games/:id` - update game metadata (title, description, thumbnail, technology, minPlayers, maxPlayers, visibility, remixable) and code (gameScreenCode, controllerScreenCode). Owner only.
-- [ ] **[Backend]** Implement `DELETE /api/v1/games/:id` - soft-delete a game and its assets. Owner only.
-- [ ] **[Backend]** Implement `POST /api/v1/games/:id/publish` - validate title, non-empty canvas code, and verified email. Create immutable `GameVersion` snapshot, increment versionNumber, set publishedVersionId, transition status to published.
-- [ ] **[Backend]** Implement `POST /api/v1/games/:id/archive` and `POST /api/v1/games/:id/unarchive` - lifecycle transitions between published/archived/draft.
-- [ ] **[Backend]** Implement `POST /api/v1/games/:id/fork` - create a copy of a remixable game under the authenticated user with forkedFromId attribution.
-- [ ] **[Backend]** Implement `GET /api/v1/games/:id/versions` - list all published versions (paginated).
-- [ ] **[Backend]** Implement `GET /api/v1/games/:id/versions/:versionId` - get a specific version's code and changelog.
-- [ ] **[Backend]** Implement `POST /api/v1/games/:id/assets` - upload game asset (multipart/form-data), validate file type (PNG, JPG, SVG, GIF, MP3, WAV, OGG, TTF, WOFF2) and size limits.
-- [ ] **[Backend]** Implement `GET /api/v1/games/:id/assets` - list all assets for a game.
-- [ ] **[Backend]** Implement `GET /api/v1/games/:id/assets/:assetId` - get a single asset.
-- [ ] **[Backend]** Implement `DELETE /api/v1/games/:id/assets/:assetId` - delete an asset. Owner only.
-- [ ] **[Backend]** Implement `GET /api/v1/tags` - list all platform tags, optionally filtered by category.
-- [ ] **[Backend]** Implement `PUT /api/v1/games/:id/tags` - set the tags for a game (replace all). Owner only.
-- [ ] **[Backend]** Implement `GET /api/v1/games/:id/tags` - get the tags assigned to a game.
-- [ ] **[Backend]** Implement `GET /api/v1/users/me/games` - list the authenticated user's own games (all statuses).
-- [ ] **[Backend]** Implement `GET /api/v1/users/:username/games` - list a user's published, public games.
+- [X] **[Database]** Create `Game` table migration with all fields including gameScreenCode, controllerScreenCode, publishedVersionId, cached aggregates (playCount, totalPlayTime, avgRating, reviewCount), and forkedFromId self-reference.
+- [X] **[Database]** Create `GameVersion` table migration with unique constraint on (gameId, versionNumber).
+- [X] **[Database]** Create `GameAsset` table migration.
+- [X] **[Database]** Create `Tag` table migration with unique constraints on name and slug.
+- [X] **[Database]** Create `GameTag` join table migration with composite primary key (gameId, tagId).
+- [X] **[Database]** Seed initial `Tag` records for all three categories: genre (Racing, Trivia, Drawing, Strategy, etc.), mood (Competitive, Cooperative, Relaxed, Chaotic, etc.), and playerStyle (Free-for-all, Teams, Turn-based, Real-time, etc.).
+- [X] **[Backend]** Implement SeaORM entity models for `Game`, `GameVersion`, `GameAsset`, `Tag`, and `GameTag`.
+- [X] **[Backend]** Implement `POST /api/v1/games` - create a new game in draft/private status with the authenticated user as creator.
+- [X] **[Backend]** Implement `GET /api/v1/games/:id` - return game details (respecting visibility and ownership rules).
+- [X] **[Backend]** Implement `PATCH /api/v1/games/:id` - update game metadata (title, description, thumbnail, technology, minPlayers, maxPlayers, visibility, remixable) and code (gameScreenCode, controllerScreenCode). Owner only.
+- [X] **[Backend]** Implement `DELETE /api/v1/games/:id` - soft-delete a game and its assets. Owner only.
+- [X] **[Backend]** Implement `POST /api/v1/games/:id/publish` - validate title, non-empty canvas code, and verified email. Create immutable `GameVersion` snapshot, increment versionNumber, set publishedVersionId, transition status to published.
+- [X] **[Backend]** Implement `POST /api/v1/games/:id/archive` and `POST /api/v1/games/:id/unarchive` - lifecycle transitions between published/archived/draft.
+- [X] **[Backend]** Implement `POST /api/v1/games/:id/fork` - create a copy of a remixable game under the authenticated user with forkedFromId attribution.
+- [X] **[Backend]** Implement `GET /api/v1/games/:id/versions` - list all published versions (paginated).
+- [X] **[Backend]** Implement `GET /api/v1/games/:id/versions/:versionId` - get a specific version's code and changelog.
+- [X] **[Backend]** Implement `POST /api/v1/games/:id/assets` - upload game asset (multipart/form-data), validate file type (PNG, JPG, SVG, GIF, MP3, WAV, OGG, TTF, WOFF2) and size limits.
+- [X] **[Backend]** Implement `GET /api/v1/games/:id/assets` - list all assets for a game.
+- [X] **[Backend]** Implement `GET /api/v1/games/:id/assets/:assetId` - get a single asset.
+- [X] **[Backend]** Implement `DELETE /api/v1/games/:id/assets/:assetId` - delete an asset. Owner only.
+- [X] **[Backend]** Implement `GET /api/v1/tags` - list all platform tags, optionally filtered by category.
+- [X] **[Backend]** Implement `PUT /api/v1/games/:id/tags` - set the tags for a game (replace all). Owner only.
+- [X] **[Backend]** Implement `GET /api/v1/games/:id/tags` - get the tags assigned to a game.
+- [X] **[Backend]** Implement `GET /api/v1/users/me/games` - list the authenticated user's own games (all statuses).
+- [X] **[Backend]** Implement `GET /api/v1/users/:username/games` - list a user's published, public games.
 - [ ] **[Frontend]** Build "My Games" dashboard listing the creator's games with status badges and quick actions.
 - [ ] **[Frontend]** Build game creation dialog/page with title, description, technology selection, and player count configuration.
 - [ ] **[Frontend]** Build game settings page for editing metadata, visibility, remixable toggle, and tags.
 - [ ] **[Frontend]** Build publish flow with confirmation dialog showing version changelog input.
 - [ ] **[Frontend]** Build game asset manager: upload, list, preview, and delete assets.
 - [ ] **[Frontend]** Build version history page showing all published versions with changelogs.
-- [ ] **[Test]** Write backend tests for game CRUD, publish flow (validation, version creation), archive/unarchive, forking, asset management, and tag operations.
+- [X] **[Test]** Write backend tests for game CRUD, publish flow (validation, version creation), archive/unarchive, forking, asset management, and tag operations.
 
 ---
 
