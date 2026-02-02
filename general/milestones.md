@@ -202,17 +202,17 @@ The actual game logic, temporarily hardcoded in the frontend.
 
 **Goal:** Build the browser-based game development environment with dual-pane code editor, live preview, and test session launch capability.
 
-- [ ] **[Frontend]** Build the Creative Studio layout with resizable panels: code editor area, preview area, and game settings sidebar.
-- [ ] **[Frontend]** Integrate Monaco Editor (`@monaco-editor/react`) with dual editor panes - one for Game Screen code, one for Controller Screen code.
-- [ ] **[Frontend]** Configure Monaco for JavaScript/TypeScript with syntax highlighting, auto-completion, and inline error detection.
-- [ ] **[Frontend]** Implement auto-save: debounced saves of gameScreenCode and controllerScreenCode to the backend via `PATCH /api/v1/games/:id`.
-- [ ] **[Frontend]** Build the Game Screen preview panel: render the game screen canvas using p5.js in a sandboxed iframe.
-- [ ] **[Frontend]** Build the Controller Screen preview panel: simulated phone frame rendering the controller canvas for testing without a second device.
-- [ ] **[Frontend]** Implement the game runtime sandbox: isolate game code execution, prevent access to browser APIs outside the canvas, block external network requests, and provide the platform API (player list, input events, state broadcast).
-- [ ] **[Frontend]** Build the platform runtime API that games use to interact with session data: `getPlayers()`, `onPlayerInput()`, `broadcastState()`, `onStateUpdate()`.
-- [ ] **[Frontend]** Build the "Test Session" button: launch a private session from the studio using draft code (not published version), display session code and QR code for live testing with real devices.
-- [ ] **[Frontend]** Create Zustand editor store for managing editor state: active file, unsaved changes, preview mode, and split layout preferences.
-- [ ] **[Frontend]** Build asset browser panel within the studio: list game assets, drag-to-insert asset URL into code.
+- [X] **[Frontend]** Build the Creative Studio layout with resizable panels: code editor area, preview area, and game settings sidebar.
+- [X] **[Frontend]** Integrate Monaco Editor (`@monaco-editor/react`) with dual editor panes - one for Game Screen code, one for Controller Screen code.
+- [X] **[Frontend]** Configure Monaco for JavaScript/TypeScript with syntax highlighting, auto-completion, and inline error detection.
+- [X] **[Frontend]** Implement auto-save: debounced saves of gameScreenCode and controllerScreenCode to the backend via `PATCH /api/v1/games/:id`.
+- [X] **[Frontend]** Build the Game Screen preview panel: render the game screen canvas using p5.js in a sandboxed iframe.
+- [X] **[Frontend]** Build the Controller Screen preview panel: simulated phone frame rendering the controller canvas for testing without a second device.
+- [X] **[Frontend]** Implement the game runtime sandbox: isolate game code execution, prevent access to browser APIs outside the canvas, block external network requests, and provide the platform API (player list, input events, state broadcast).
+- [X] **[Frontend]** Build the platform runtime API that games use to interact with session data: `getPlayers()`, `onPlayerInput()`, `broadcastState()`, `onStateUpdate()`.
+- [X] **[Frontend]** Build the "Test Session" button: launch a private session from the studio using draft code (not published version), display session code and QR code for live testing with real devices.
+- [X] **[Frontend]** Create Zustand editor store for managing editor state: active file, unsaved changes, preview mode, and split layout preferences.
+- [X] **[Frontend]** Build asset browser panel within the studio: list game assets, drag-to-insert asset URL into code.
 - [ ] **[Test]** Write tests for runtime sandbox isolation: verify games cannot access forbidden APIs, external networks, or DOM outside canvas.
 - [ ] **[Test]** Write tests for auto-save and editor state management.
 
