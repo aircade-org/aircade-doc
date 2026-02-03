@@ -213,8 +213,8 @@ The actual game logic, temporarily hardcoded in the frontend.
 - [X] **[Frontend]** Build the "Test Session" button: launch a private session from the studio using draft code (not published version), display session code and QR code for live testing with real devices.
 - [X] **[Frontend]** Create Zustand editor store for managing editor state: active file, unsaved changes, preview mode, and split layout preferences.
 - [X] **[Frontend]** Build asset browser panel within the studio: list game assets, drag-to-insert asset URL into code.
-- [ ] **[Test]** Write tests for runtime sandbox isolation: verify games cannot access forbidden APIs, external networks, or DOM outside canvas.
-- [ ] **[Test]** Write tests for auto-save and editor state management.
+- [X] **[Test]** Write tests for runtime sandbox isolation: verify games cannot access forbidden APIs, external networks, or DOM outside canvas.
+- [X] **[Test]** Write tests for auto-save and editor state management.
 
 ---
 
@@ -222,35 +222,35 @@ The actual game logic, temporarily hardcoded in the frontend.
 
 **Goal:** Implement the session system with WebSocket-based real-time communication, enabling the full session lifecycle: lobby, game loading, playing, pausing, and ending.
 
-- [ ] **[Database]** Create `Session` table migration with all fields: id, hostId, gameId, gameVersionId, sessionCode, status, maxPlayers, createdAt, updatedAt, endedAt.
-- [ ] **[Database]** Create `Player` table migration with all fields: id, sessionId, userId, displayName, avatarUrl, connectionStatus, leftAt, createdAt.
-- [ ] **[Backend]** Implement SeaORM entity models for `Session` and `Player`.
-- [ ] **[Backend]** Implement session code generation: 4-6 uppercase alphanumeric characters excluding ambiguous characters (0/O, 1/I/L), unique among active sessions, case-insensitive lookup.
-- [ ] **[Backend]** Implement `POST /api/v1/sessions` - create a session in lobby status with generated session code. Requires authenticated user as host (hostId is required). Enforce max player limits based on host subscription tier.
-- [ ] **[Backend]** Implement `GET /api/v1/sessions/:id` - return session details including player list and loaded game info.
-- [ ] **[Backend]** Implement `PATCH /api/v1/sessions/:id` - update session settings (maxPlayers). Host only.
-- [ ] **[Backend]** Implement `DELETE /api/v1/sessions/{sessionId}` - set status to ended, set endedAt, close all WebSocket connections. Host only.
-- [ ] **[Backend]** Implement `POST /api/v1/sessions/{sessionId}/game` - load a published game into the session. Validate game is published with a publishedVersionId. Set gameId and gameVersionId. Transition to playing.
-- [ ] **[Backend]** Implement `DELETE /api/v1/sessions/{sessionId}/game` - unload game, clear gameId/gameVersionId, return to lobby. Players stay connected.
-- [ ] **[Backend]** Implement `POST /api/v1/sessions/:id/pause` and `POST /api/v1/sessions/:id/resume` - toggle between playing and paused states.
-- [ ] **[Backend]** Implement `POST /api/v1/sessions/:id/restart` - restart the current game from the beginning.
-- [ ] **[Backend]** Implement `POST /api/v1/sessions/{sessionCode}/join` - join a session by session code in path. Validate session exists, is not ended, and has not reached maxPlayers. Create Player record. Support anonymous join (userId nullable).
-- [ ] **[Backend]** Implement `GET /api/v1/sessions/:id/players` - list all players in a session.
-- [ ] **[Backend]** Implement `DELETE /api/v1/sessions/:id/players/:playerId` - host removes a player from the session.
-- [ ] **[Backend]** Implement `PATCH /api/v1/sessions/{sessionId}/players/me` - allow a player to update their own displayName or avatar within a session.
-- [ ] **[Backend]** Implement `GET /api/v1/users/me/sessions` - list sessions hosted by the authenticated user.
-- [ ] **[Backend]** Implement WebSocket endpoint `WS /api/v1/sessions/{sessionId}/ws` - establish WebSocket connection for a client (host or player). Accepts `role`, `playerId`, and optional `token` as query parameters.
-- [ ] **[Backend]** Implement WebSocket message routing: scope all messages to the session, relay player input (controller -> game screen), relay game state updates (game screen -> controllers), handle session control events (join, leave, load, pause, resume, end).
-- [ ] **[Backend]** Implement player connection lifecycle: track connectionStatus, handle disconnect with reconnection grace period, restore state on reconnect, free slot on timeout or voluntary leave.
-- [ ] **[Backend]** Implement session timeout: automatically end idle sessions after configurable inactivity period.
-- [ ] **[Frontend]** Build session creation UI on the Console (big screen) experience.
-- [ ] **[Frontend]** Build lobby screen: display session code prominently, show QR code (encoding join URL), render connected player list with avatars and names in real time.
-- [ ] **[Frontend]** Create Zustand session store for managing session state, player list, and WebSocket connection.
-- [ ] **[Frontend]** Implement WebSocket client: connect, reconnect on drop, handle all message types, update session store.
-- [ ] **[Frontend]** Build game loading flow on Console: browse library from lobby, select game, display loading state, render Game Screen canvas when loaded.
-- [ ] **[Frontend]** Build host controls overlay: pause, resume, restart, unload game, end session, remove player.
-- [ ] **[Test]** Write backend tests for session CRUD, join flow (including max player enforcement), and all session state transitions.
-- [ ] **[Test]** Write backend tests for WebSocket message routing, player connection lifecycle, and reconnection grace period.
+- [X] **[Database]** Create `Session` table migration with all fields: id, hostId, gameId, gameVersionId, sessionCode, status, maxPlayers, createdAt, updatedAt, endedAt.
+- [X] **[Database]** Create `Player` table migration with all fields: id, sessionId, userId, displayName, avatarUrl, connectionStatus, leftAt, createdAt.
+- [X] **[Backend]** Implement SeaORM entity models for `Session` and `Player`.
+- [X] **[Backend]** Implement session code generation: 4-6 uppercase alphanumeric characters excluding ambiguous characters (0/O, 1/I/L), unique among active sessions, case-insensitive lookup.
+- [X] **[Backend]** Implement `POST /api/v1/sessions` - create a session in lobby status with generated session code. Requires authenticated user as host (hostId is required). Enforce max player limits based on host subscription tier.
+- [X] **[Backend]** Implement `GET /api/v1/sessions/:id` - return session details including player list and loaded game info.
+- [X] **[Backend]** Implement `PATCH /api/v1/sessions/:id` - update session settings (maxPlayers). Host only.
+- [X] **[Backend]** Implement `DELETE /api/v1/sessions/{sessionId}` - set status to ended, set endedAt, close all WebSocket connections. Host only.
+- [X] **[Backend]** Implement `POST /api/v1/sessions/{sessionId}/game` - load a published game into the session. Validate game is published with a publishedVersionId. Set gameId and gameVersionId. Transition to playing.
+- [X] **[Backend]** Implement `DELETE /api/v1/sessions/{sessionId}/game` - unload game, clear gameId/gameVersionId, return to lobby. Players stay connected.
+- [X] **[Backend]** Implement `POST /api/v1/sessions/:id/pause` and `POST /api/v1/sessions/:id/resume` - toggle between playing and paused states.
+- [X] **[Backend]** Implement `POST /api/v1/sessions/:id/restart` - restart the current game from the beginning.
+- [X] **[Backend]** Implement `POST /api/v1/sessions/{sessionCode}/join` - join a session by session code in path. Validate session exists, is not ended, and has not reached maxPlayers. Create Player record. Support anonymous join (userId nullable).
+- [X] **[Backend]** Implement `GET /api/v1/sessions/:id/players` - list all players in a session.
+- [X] **[Backend]** Implement `DELETE /api/v1/sessions/:id/players/:playerId` - host removes a player from the session.
+- [X] **[Backend]** Implement `PATCH /api/v1/sessions/{sessionId}/players/me` - allow a player to update their own displayName or avatar within a session.
+- [X] **[Backend]** Implement `GET /api/v1/users/me/sessions` - list sessions hosted by the authenticated user.
+- [X] **[Backend]** Implement WebSocket endpoint `WS /api/v1/sessions/{sessionId}/ws` - establish WebSocket connection for a client (host or player). Accepts `role`, `playerId`, and optional `token` as query parameters.
+- [X] **[Backend]** Implement WebSocket message routing: scope all messages to the session, relay player input (controller -> game screen), relay game state updates (game screen -> controllers), handle session control events (join, leave, load, pause, resume, end).
+- [X] **[Backend]** Implement player connection lifecycle: track connectionStatus, handle disconnect with reconnection grace period, restore state on reconnect, free slot on timeout or voluntary leave.
+- [X] **[Backend]** Implement session timeout: automatically end idle sessions after configurable inactivity period.
+- [X] **[Frontend]** Build session creation UI on the Console (big screen) experience.
+- [X] **[Frontend]** Build lobby screen: display session code prominently, show QR code (encoding join URL), render connected player list with avatars and names in real time.
+- [X] **[Frontend]** Create Zustand session store for managing session state, player list, and WebSocket connection.
+- [X] **[Frontend]** Implement WebSocket client: connect, reconnect on drop, handle all message types, update session store.
+- [X] **[Frontend]** Build game loading flow on Console: browse library from lobby, select game, display loading state, render Game Screen canvas when loaded.
+- [X] **[Frontend]** Build host controls overlay: pause, resume, restart, unload game, end session, remove player.
+- [X] **[Test]** Write backend tests for session CRUD, join flow (including max player enforcement), and all session state transitions.
+- [X] **[Test]** Write backend tests for WebSocket message routing, player connection lifecycle, and reconnection grace period.
 
 ---
 
